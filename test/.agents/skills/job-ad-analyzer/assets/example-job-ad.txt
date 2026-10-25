@@ -1,0 +1,36 @@
+Senior Product Manager, Merchant Onboarding
+Northwind Payments - Hybrid (London, 3 days in office)
+Ref EXAMPLE-001
+
+About us
+Northwind Payments helps small businesses get paid faster. We are a fast-paced, ambitious team of 450 across 8 European markets.
+
+The role
+You will own the end-to-end merchant onboarding experience for our new instant payouts product. Our activation rate has stalled and onboarding takes too long, so this is a role for someone who can fix the funnel and work with risk and compliance.
+
+What you'll do
+- Own the roadmap for merchant onboarding and identity verification
+- Run weekly experiments and report conversion and activation results to the leadership team
+- Partner with risk, compliance and engineering to reduce fraud without hurting conversion
+- Lead a squad of 8 engineers, 2 designers and 1 data analyst
+- Work with pricing and finance on packaging for instant payouts
+
+What you'll need
+- 6+ years of product management experience in B2B SaaS or payments
+- Proven experience running A/B tests and experimentation programmes
+- Strong stakeholder management skills across risk, legal and engineering
+- Experience with KYC / AML flows or identity verification
+- Strong SQL skills
+- Must have the right to work in the UK
+
+Nice to have
+- Experience with PSD2 and 3DS
+- Exposure to usage-based pricing
+- Familiarity with Looker or Amplitude
+
+What we offer
+Competitive salary, 25 days holiday, pension, private health cover, learning budget.
+
+To apply, send your CV and a short cover letter. Applications close 30 November.
+
+(Fictional example: all names and figures in this file are fictional; never reuse them. Any resemblance to real people or companies is coincidental.)

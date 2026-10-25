@@ -1,0 +1,21 @@
+# Third-party source material (copyrighted) and working files: never publish
+# (artifacts/ is also the agent's input/output folder: personal data, never commit)
+artifacts/
+.work/
+research/corpus/
+
+# Generated documents
+*.docx
+!.agents/skills/**/assets/*.docx
+
+# OS / tooling
+.DS_Store
+node_modules/
+*.tgz
+__pycache__/
+
+# Personal job-search data (application tracker, offers, reference sheets)
+job-applications.csv
+offers*.json
+*_References*.md
+*.lock

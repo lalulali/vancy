@@ -1,0 +1,61 @@
+{
+  "name": "career-consultant",
+  "description": "Simonek, a candid AI career consultant in the style of an experienced recruiter. Plans a whole job application and routes each step to a skill: job-ad analysis, CV, cover letter, LinkedIn, portfolio, references, interview prep (behavioural and PM case), salary negotiation, tracker. Reads artifacts/input, writes artifacts/output. Use for 'help me apply', 'I have an interview', 'I got an offer'.",
+  "prompt": "file://./career-consultant/prompt.md",
+  "welcomeMessage": "Hi, I'm Simonek — an AI career consultant that works in the style of an experienced recruiter. Drop your CV, LinkedIn export, job ads and notes into artifacts/input, then tell me where you are: targeting a role, polishing a CV or letter, preparing for an interview, or weighing an offer. Tell me the country too. Everything I produce goes to artifacts/output. Your documents are processed by the AI model provider, so tell me before we handle anyone else's personal details, such as referees.",
+  "tools": ["read", "write", "shell"],
+  "includeMcpJson": false,
+  "resources": [
+    "file://./career-consultant/workflow.md",
+    "skill://.agents/skills/job-ad-analyzer/SKILL.md",
+    "skill://.agents/skills/cv-builder/SKILL.md",
+    "skill://.agents/skills/cv-reviewer/SKILL.md",
+    "skill://.agents/skills/cover-letter-builder/SKILL.md",
+    "skill://.agents/skills/cover-letter-reviewer/SKILL.md",
+    "skill://.agents/skills/linkedin-profile-builder/SKILL.md",
+    "skill://.agents/skills/portfolio-case-study-builder/SKILL.md",
+    "skill://.agents/skills/reference-sheet-builder/SKILL.md",
+    "skill://.agents/skills/interview-prep/SKILL.md",
+    "skill://.agents/skills/pm-interview-prep/SKILL.md",
+    "skill://.agents/skills/salary-negotiation/SKILL.md",
+    "skill://.agents/skills/application-tracker/SKILL.md"
+  ],
+  "permissions": {
+    "rules": [
+      { "capability": "skill", "effect": "allow" },
+
+      { "capability": "fs_read", "match": [
+        "artifacts/**",
+        ".agents/skills/**", ".agents/agents/**",
+        ".kiro/skills/**", ".kiro/agents/**", ".claude/skills/**",
+        "~/.agents/skills/**", "~/.kiro/skills/**", "~/.kiro/agents/**"
+      ], "effect": "allow" },
+      { "capability": "fs_read", "match": [
+        "**/.env", "**/.env.*", "**/.ssh/**", "**/.aws/**", "**/*.pem", "**/*.key",
+        "**/.kiro/settings/**", "~/.kiro/sessions/**", "~/.kiro/memories/**"
+      ], "effect": "deny" },
+
+      { "capability": "fs_write", "match": ["artifacts/output/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": [
+        "artifacts/input/**", "**/.agents/**", "**/.kiro/**", "**/.claude/**", "**/.ssh/**", "**/SKILL.md"
+      ], "effect": "deny" },
+
+      { "capability": "shell", "match": [
+        "python3 .agents/skills/*/scripts/*.py *",
+        "python3 .kiro/skills/*/scripts/*.py *",
+        "python3 .claude/skills/*/scripts/*.py *",
+        "python3 ~/.agents/skills/*/scripts/*.py *",
+        "python3 ~/.kiro/skills/*/scripts/*.py *",
+        "mkdir -p artifacts/*",
+        "pdftotext -layout artifacts/input/* -",
+        "soffice --headless --convert-to pdf --outdir artifacts/output/* artifacts/output/*"
+      ], "effect": "allow" },
+      { "capability": "shell", "match": [
+        "*../*", "*$(*", "*`*",
+        "*macro:*", "* -env:*",
+        "python* -c*", "python* -m*", "python* -",
+        "rm *", "sudo *", "git push *", "curl *", "wget *"
+      ], "effect": "deny" }
+    ]
+  }
+}

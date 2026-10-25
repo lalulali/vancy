@@ -1,0 +1,33 @@
+[
+  {
+    "name": "Brightwater Software",
+    "currency": "GBP",
+    "base_annual": 85000,
+    "base_payments_per_year": 12,
+    "bonus_target_pct": 10,
+    "bonus_confidence_pct": 70,
+    "sign_on": 5000,
+    "sign_on_clawback_months": 12,
+    "equity_grant_value": 0,
+    "employer_retirement_pct": 5,
+    "benefits_value_annual": 3000,
+    "extra_leave_days": 0,
+    "annual_costs": 1800,
+    "notes": "Fictional example data; never reuse. Any resemblance to real people or companies is coincidental. Hybrid 3 days; 25 days leave"
+  },
+  {
+    "name": "Alderkey Cloud",
+    "currency": "GBP",
+    "base_annual": 78000,
+    "bonus_target_pct": 5,
+    "bonus_confidence_pct": 100,
+    "equity_grant_value": 60000,
+    "equity_vest_years": 4,
+    "equity_haircut_pct": 80,
+    "employer_retirement_pct": 8,
+    "benefits_value_annual": 2000,
+    "extra_leave_days": 5,
+    "annual_costs": 600,
+    "notes": "Fictional example data; never reuse. Any resemblance to real people or companies is coincidental. Fully remote; equity is private-company stock, so a high 80% haircut is used"
+  }
+]

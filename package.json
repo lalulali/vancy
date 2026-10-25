@@ -1,0 +1,62 @@
+{
+  "name": "career-consultant-skills",
+  "version": "1.0.0",
+  "description": "Agent Skills and a career-consultant agent for the whole job search: job-ad analysis, CV and cover letter (build and review), LinkedIn, portfolio case studies, references, behavioural and PM interview prep, salary negotiation and an application tracker. Worldwide, no invented facts.",
+  "type": "module",
+  "bin": {
+    "career-consultant-skills": "bin/cli.mjs",
+    "vancy": "bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    ".agents/skills/",
+    ".agents/agents/",
+    "README.md",
+    "README.zh-CN.md",
+    "GUIDE.md",
+    "GUIDE.zh-CN.md",
+    "WORKFLOW.md",
+    "WORKFLOW.zh-CN.md",
+    "LICENSE",
+    "!**/job-applications.csv",
+    "!**/*.docx",
+    "!**/*.jsonl",
+    "!**/offers.json",
+    "!**/*_References*.md",
+    "!**/.env*",
+    "!**/__pycache__",
+    "!**/*.pyc",
+    "!**/.DS_Store",
+    "!**/*.lock"
+  ],
+  "scripts": {
+    "check": "node scripts/check-skills.mjs",
+    "prepublishOnly": "node scripts/check-skills.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "agent-skills",
+    "ats",
+    "career",
+    "career-agent",
+    "claude-code",
+    "codex",
+    "cover-letter",
+    "cursor",
+    "cv",
+    "interview",
+    "job-application",
+    "job-search",
+    "kiro",
+    "linkedin",
+    "pm-interview",
+    "portfolio",
+    "product-manager",
+    "resume",
+    "salary-negotiation",
+    "skills"
+  ],
+  "license": "MIT"
+}
