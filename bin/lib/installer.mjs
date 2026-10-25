@@ -120,15 +120,30 @@ export function createInstaller(deps) {
   }
 
   function bootstrapRootDocs(targetDir, projectName, selectedHarnesses) {
-    const canonicalFile = path.join(
-      AGENTS_SRC,
-      "agents",
-      "career-consultant",
-      "prompt.md",
-    );
-    const canonicalContent = fs.existsSync(canonicalFile)
-      ? `<!-- Vancy-managed — removed on uninstall -->\n` +
-        fs.readFileSync(canonicalFile, "utf8")
+    const canonicalFile = fs.existsSync(
+      path.join(targetDir, ".agents", "templates", "system", "AGENTS.md.canonical"),
+    )
+      ? path.join(targetDir, ".agents", "templates", "system", "AGENTS.md.canonical")
+      : fs.existsSync(
+          path.join(targetDir, ".agents", "templates", "system", "agent.md.canonical"),
+        )
+      ? path.join(targetDir, ".agents", "templates", "system", "agent.md.canonical")
+      : fs.existsSync(
+          path.join(AGENTS_SRC, "templates", "system", "AGENTS.md.canonical"),
+        )
+      ? path.join(AGENTS_SRC, "templates", "system", "AGENTS.md.canonical")
+      : fs.existsSync(
+          path.join(AGENTS_SRC, "templates", "system", "agent.md.canonical"),
+        )
+      ? path.join(AGENTS_SRC, "templates", "system", "agent.md.canonical")
+      : path.join(AGENTS_SRC, "agents", "career-consultant", "prompt.md");
+
+    const rawContent = fs.existsSync(canonicalFile)
+      ? fs.readFileSync(canonicalFile, "utf8").replace(/\{Project Name\}/g, projectName)
+      : "";
+
+    const canonicalContent = rawContent
+      ? `<!-- Vancy-managed — removed on uninstall -->\n` + rawContent
       : "";
 
     const agentsMd = canonicalContent;
