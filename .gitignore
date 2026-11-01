@@ -1,6 +1,7 @@
 # Third-party source material (copyrighted) and working files: never publish
 # (artifacts/ is also the agent's input/output folder: personal data, never commit)
 artifacts/
+archive/
 .work/
 research/corpus/
 test/

@@ -54,4 +54,7 @@ Avoid as openers: Responsible for, Duties included, Tasked with, Worked on, Help
 - No first person ("I", "my"); implied subject.
 - Numerals for all numbers (3, not three) except at sentence start; consistent currency format (US$1.2M / €1.2M).
 - Spell out an acronym once if the reader might not know it; keep the job ad's acronyms if it uses them.
+- **Deslop & Plain-Clarity Rule (Plain Words, Zero Circumlocution):**
+  - Never use fancy/thesaurus words (`utilize` → `use`, `endeavored` → `tried`, `commenced` → `started`, `facilitated` → `ran/helped`, `ameliorated` → `fixed`, `multifaceted` → `complex`, `ubiquitous` → `common`, `myriad`/`plethora` → `many`) or AI slop words (`delve`, `tapestry`, `pivotal`, `testament`, `fostering`, `interplay`, `underscoring`).
+  - Never circle around the point with zombie nominalizations (`was in the process of migrating` → `migrated`, `made a decision to consolidate` → `consolidated`, `for the purpose of reducing` → `to cut`). Every bullet must be understood by a recruiter on the first read.
 - No clichés without proof: "results-driven", "team player", "passionate", "dynamic", "proven track record".

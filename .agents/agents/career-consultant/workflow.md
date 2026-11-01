@@ -26,9 +26,9 @@ Step numbers match the "Full application chain" in `prompt.md`.
 - In commands and paths, capitalised tokens (COMPANY_ROLE, FILE) are placeholders to replace with real values; square brackets in command synopses mean optional.
 
 ## 1. Intake (once)
-Skip only basic administrative facts (name, contact details, dates) that the files in `artifacts/input/`, an uploaded CV, LinkedIn export, or job ad already answer. **Never treat an existing CV as the complete record of the user's background** — old CVs omit technical depth, architectures, tools, system scale, and metrics that a specific job ad requires. Ask in small rounds (3–5 questions at a time) for what is missing.
+Skip only basic administrative facts (name, contact details, dates) that the files in `artifacts/input/`, an uploaded CV, LinkedIn export, or job ad already answer. **Never treat an existing CV as the complete record of the user's background** — old CVs routinely omit domain depth, methodologies, tools, operational/system scale, budgets, and business metrics that a specific job ad requires. Ask in small rounds (3–5 questions at a time) for what is missing.
 
-Round A — target: role(s); job ad (a file in `artifacts/input/`, or pasted text); country/market; career stage (student, early, mid, senior, executive, career changer, returner); deadline.
+Round A — target: role(s); industry; job ad (a file in `artifacts/input/`, or pasted text); country/market; career stage (student, early, mid, senior, executive, career changer, returner); deadline.
 Round B — materials: existing CV/LinkedIn/notes; how it will be sent (attached files, email body, or portal with a character limit).
 Round C — identity: name; professional email; phone with country code; city & country; LinkedIn/portfolio; work authorisation if cross-border.
 
@@ -40,19 +40,19 @@ Set conventions from `cv-builder`/`cover-letter-builder` `references/regional-co
 Run **`job-ad-analyzer`** on the posting (a file in `artifacts/input/`, or ask the user to paste the full text and save it to the application's output folder). Save `Job_Brief_COMPANY_ROLE.md`. It gives the ranked requirements, hard filters, keyword map, flags (including ghost-job, scam and discrimination-risk wording), and an honest Apply / Apply with a plan / Reconsider recommendation. If a hard filter is not met, say so before investing more time. Every later skill should start from the brief rather than re-reading the ad.
 
 ## 3. Discovery & Positioning (mandatory before writing or retargeting)
-- **Gap & Technical Alignment Check.** Compare the Job Brief's ranked requirements and technical stack against the candidate's current CV/profile. Show the user: (a) requirements already proven, (b) bullets that are too high-level/vague, and (c) required skills/tools not yet visible on the CV.
-- **Background & Technical Deep-Dive Interview.** Before drafting or modifying any document, ask 3–5 targeted questions per round to draw out the candidate's real work:
-  - *Unlisted experience:* Did they use any of the job ad's missing tools, languages, frameworks, or methodologies in past roles without listing them?
-  - *Technical depth ("the How"):* What was the actual system architecture, tech stack, data/traffic scale, latency/SLA, and technical trade-off behind their key projects?
-  - *Personal ownership:* Which exact component, service, or decision did the candidate personally own vs. the wider team?
+- **Gap & Alignment Check.** Compare the Job Brief's ranked requirements, domain skills, and toolset against the candidate's current CV/profile. Show the user: (a) requirements already proven, (b) bullets that are too high-level/vague, and (c) required skills, methods, or tools not yet visible on the CV.
+- **Background & Experience Deep-Dive Interview.** Before drafting or modifying any document, ask 3–5 targeted questions per round to draw out the candidate's real work:
+  - *Unlisted experience:* Did they use any of the job ad's missing tools, methodologies, frameworks, or domain processes in past roles without listing them?
+  - *Domain depth ("the How"):* What were the actual tools, frameworks, operational/system scale (budgets, volume, team size, architectures), protocols, and strategic trade-offs behind their key projects?
+  - *Personal ownership:* Which exact deliverable, process, service, or decision did the candidate personally own vs. the wider team?
   - *Outcomes & metrics:* Use the achievement prompts in `cv-builder/references/intake-questions.md` to surface before → after numbers, percentages, or scale. **Never invent or assume methods, tools, or figures; mark any remaining unknowns `[fact?]` or `[metric?]`.**
-- **Positioning agreement.** Draft a one-line positioning statement with the user: `[identity] who [signature value], evidenced by [headline proof]`. Example: "Payments PM who turns onboarding friction into revenue, having cut onboarding from 9 days to 2." Agree the **top 3 proof points** and which bullets will be added or re-angled before generating the CV draft.
+- **Positioning agreement.** Draft a one-line positioning statement with the user: `[identity] who [signature value], evidenced by [headline proof]`. Example: "Payments PM who turns onboarding friction into revenue, having cut onboarding from 9 days to 2" or "Healthcare Operations Lead who cut patient wait times 35% across 4 regional clinics". Agree the **top 3 proof points** and which bullets will be added or re-angled before generating the CV draft.
 
 ## 4. CV
 1. If the user has a CV (usually in `artifacts/input/`), run **`cv-reviewer`** first: score it, agree the top fixes, and interview the user on any `[fact?]`/`[metric?]` gaps before strengthening or rebuilding.
-2. Run **`cv-builder`** to produce or tailor the CV to the target job ad, incorporating the confirmed technical details and achievements from Step 3 (do not re-ask already answered questions, and never rewrite autonomously by guessing).
+2. Run **`cv-builder`** to produce or tailor the CV to the target job ad, incorporating the confirmed domain details, tools, and achievements from Step 3 (do not re-ask already answered questions, and never rewrite autonomously by guessing).
 3. Confirm the chosen template, page size, and spelling. These must carry over to the cover letter.
-4. Deliver the CV draft, walk through the changes with the user to fine-tune wording and technical accuracy, resolve any remaining `[metric?]` or `[fact?]` gaps, then produce the final (`--final`). After the user approves the final, copy it to `artifacts/output/Master_CV.md` if none exists, for later tailoring.
+4. Deliver the CV draft, walk through the changes with the user to fine-tune wording, clarity, and factual accuracy, resolve any remaining `[metric?]` or `[fact?]` gaps, then produce the final (`--final`). After the user approves the final, copy it to `artifacts/output/Master_CV.md` if none exists, for later tailoring.
 
 ## 5. Cover letter
 1. If the user already has a letter, run **`cover-letter-reviewer`** first, gather any missing facts/hooks from the user, and agree the fixes.
@@ -98,7 +98,7 @@ Trigger each when the user reaches it; reuse the candidate profile and the Job B
 After each stage, update the tracker.
 
 ## 10. Multiple applications
-- Keep one **master CV** and the candidate profile in `artifacts/output/`. For each new role, compare the new Job Brief against `Master_CV.md`, **interview the user on any new technical/domain requirements not yet captured in `Master_CV.md` or `Candidate_Profile.md`** (updating both when new true facts emerge), confirm the tailoring angle, and then run `cv-builder` in tailor mode and `cover-letter-builder` fresh in `artifacts/output/COMPANY_ROLE/`. Never change facts or guess technical details between versions.
+- Keep one **master CV** and the candidate profile in `artifacts/output/`. For each new role, compare the new Job Brief against `Master_CV.md`, **interview the user on any new functional, domain, or tool requirements not yet captured in `Master_CV.md` or `Candidate_Profile.md`** (updating both when new true facts emerge), confirm the tailoring angle, and then run `cv-builder` in tailor mode and `cover-letter-builder` fresh in `artifacts/output/COMPANY_ROLE/`. Never change facts or guess domain details between versions.
 - Log each application in `application-tracker` with the exact variant sent so follow-ups stay accurate; run its weekly review.
 
 ## 11. Resuming a session

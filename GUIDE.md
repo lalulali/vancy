@@ -5,7 +5,7 @@
 > **AI Workflow Specification**: See [WORKFLOW.md](WORKFLOW.md) | [WORKFLOW.zh-CN.md](WORKFLOW.zh-CN.md)  
 > **Project Overview**: See [README.md](README.md) | [README.zh-CN.md](README.zh-CN.md)
 
-Welcome to **Vancy**! Vancy is your private, intelligent career consultant and job-search copilot. Unlike generic AI tools that hallucinate skills or rewrite resumes with buzzwords, Vancy follows a **Discovery-First, Truth-Based** approach: it interviews you about your real engineering architecture, metrics, and accomplishments to craft defendable, ATS-optimized documents.
+Welcome to **Vancy**! Vancy is your private, intelligent cross-industry career consultant and job-search copilot. Unlike generic AI tools that hallucinate skills or rewrite resumes with buzzwords, Vancy follows a **Discovery-First, Truth-Based** approach: it interviews you about your real domain scope, methodologies, operational metrics, and accomplishments to craft defendable, ATS-optimized documents across any field.
 
 ---
 

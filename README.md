@@ -45,7 +45,7 @@ A master agent orchestrates these twelve skills in sequence:
   [Job Ad Analyzer]    ──► artifacts/output/COMPANY_ROLE/Job_Brief.md
        │
        ▼
-[Technical Interview]  ──► Clarifies architecture, scale, tools, ownership, metrics
+[Discovery Interview]  ──► Clarifies domain scope, scale, tools, ownership, metrics
        │
        ▼
   [CV & Cover Letter]  ──► artifacts/output/COMPANY_ROLE/Firstname_Lastname_CV.docx

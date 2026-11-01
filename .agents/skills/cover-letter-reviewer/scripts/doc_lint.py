@@ -223,6 +223,38 @@ CLICHES = [
     "i am writing to apply", "i am writing to express", "it is with great enthusiasm",
     "please find attached", "perfect fit", "ideal candidate",
 ]
+AI_SLOP_WORDS = [
+    "delve", "delving", "tapestry", "testament", "pivotal", "beacon", "fostering",
+    "interplay", "intricacies", "underscores", "underscoring", "palpable", "symphony",
+    "kaleidoscope", "cacophony", "ethereal",
+]
+FANCY_WORD_REPLACEMENTS = {
+    "utilize": "use", "utilized": "used", "utilizing": "using", "utilization": "use",
+    "endeavor": "try", "endeavored": "tried", "commence": "start", "commenced": "started",
+    "ascertain": "find out", "elucidate": "explain", "ameliorate": "fix or improve",
+    "exacerbate": "worsen", "ubiquitous": "common or everywhere", "myriad": "many",
+    "plethora": "many", "ephemeral": "brief", "juxtaposition": "contrast",
+    "dichotomy": "split", "cognizant": "aware", "facilitate": "help or run",
+    "facilitated": "helped or ran", "paramount": "vital or first", "quintessential": "classic",
+    "multifaceted": "complex", "conundrum": "problem", "labyrinthine": "twisting",
+    "inexorable": "unstoppable", "subsequently": "later or then", "furthermore": "also",
+    "moreover": "also", "heretofore": "until now", "aforementioned": "this or that",
+    "disseminate": "share or spread", "proliferate": "multiply",
+}
+CIRCUMLOCUTION_REPLACEMENTS = {
+    "came to the realization": "realized",
+    "made a decision to": "decided to",
+    "make a decision to": "decide to",
+    "in the process of": "use direct verb",
+    "due to the fact that": "because",
+    "in order to": "to",
+    "for the purpose of": "to",
+    "in light of the fact that": "because",
+    "with regard to": "about",
+    "in close proximity to": "near",
+    "serves as an indication": "shows",
+    "at this point in time": "now",
+}
 WEAK_OPENERS = [
     "responsible for", "duties included", "duties include", "tasked with", "worked on",
     "helped", "assisted with", "involved in", "participated in", "successfully",
@@ -727,6 +759,9 @@ def lint(text, doc_type, job=None, docx_info=None):
     r["citation_markers_left"] = len(re.findall(r"\[\^[^\]]{1,100}\]", body))
     r["draft_notes_left"] = len([l for l in body.splitlines() if l.lstrip().startswith(">")])
     r["cliches"] = sorted({c for c in CLICHES if c in low})
+    r["ai_slop_words"] = sorted({w for w in AI_SLOP_WORDS if re.search(r"\b" + re.escape(w) + r"\b", low)})
+    r["fancy_words"] = {w: repl for w, repl in sorted(FANCY_WORD_REPLACEMENTS.items()) if re.search(r"\b" + re.escape(w) + r"\b", low)}
+    r["circumlocutions"] = {p: repl for p, repl in sorted(CIRCUMLOCUTION_REPLACEMENTS.items()) if p in low}
     r["personal_data_flags"] = sorted(k for k, rx in PERSONAL_DATA.items() if re.search(rx, low))
     us = [u for u, urx, b, brx in US_UK_RE if urx.search(low)]
     uk = [b for u, urx, b, brx in US_UK_RE if brx.search(low)]

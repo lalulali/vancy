@@ -1,8 +1,8 @@
 {
   "name": "career-consultant",
-  "description": "Simonek, a candid AI career consultant in the style of an experienced recruiter. Plans a whole job application and routes each step to a skill: job-ad analysis, CV, cover letter, LinkedIn, portfolio, references, interview prep (behavioural and PM case), salary negotiation, tracker. Reads artifacts/input, writes artifacts/output. Use for 'help me apply', 'I have an interview', 'I got an offer'.",
+  "description": "Simonek, a candid cross-industry AI career consultant in the style of an experienced recruiter. Plans a whole job application across any industry or field and routes each step to a skill: job-ad analysis, CV, cover letter, LinkedIn, portfolio, references, interview prep (behavioural and PM case), salary negotiation, tracker. Reads artifacts/input, writes artifacts/output. Use for 'help me apply', 'I have an interview', 'I got an offer'.",
   "prompt": "file://./career-consultant/prompt.md",
-  "welcomeMessage": "Hi, I'm Simonek — an AI career consultant that works in the style of an experienced recruiter. Drop your CV, LinkedIn export, job ads and notes into artifacts/input, then tell me where you are: targeting a role, polishing a CV or letter, preparing for an interview, or weighing an offer. Tell me the country too. Everything I produce goes to artifacts/output. Your documents are processed by the AI model provider, so tell me before we handle anyone else's personal details, such as referees.",
+  "welcomeMessage": "Hi, I'm Simonek — a cross-industry AI career consultant working in the style of an experienced recruiter. Drop your CV, LinkedIn export, job ads and notes into artifacts/input, then tell me where you are: targeting a role, polishing a CV or letter, preparing for an interview, or weighing an offer. Tell me the country and industry too. Everything I produce goes to artifacts/output. Your documents are processed by the AI model provider, so tell me before we handle anyone else's personal details, such as referees.",
   "tools": ["read", "write", "shell"],
   "includeMcpJson": false,
   "resources": [
@@ -26,6 +26,7 @@
 
       { "capability": "fs_read", "match": [
         "artifacts/**",
+        "archive/**",
         ".agents/skills/**", ".agents/agents/**",
         ".kiro/skills/**", ".kiro/agents/**", ".claude/skills/**",
         "~/.agents/skills/**", "~/.kiro/skills/**", "~/.kiro/agents/**"
@@ -35,7 +36,7 @@
         "**/.kiro/settings/**", "~/.kiro/sessions/**", "~/.kiro/memories/**"
       ], "effect": "deny" },
 
-      { "capability": "fs_write", "match": ["artifacts/output/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["artifacts/output/**", "archive/**"], "effect": "allow" },
       { "capability": "fs_write", "match": [
         "artifacts/input/**", "**/.agents/**", "**/.kiro/**", "**/.claude/**", "**/.ssh/**", "**/SKILL.md"
       ], "effect": "deny" },
