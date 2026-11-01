@@ -16,12 +16,10 @@ In your terminal, navigate to your job-search folder and run:
 
 ```bash
 # Interactive setup wizard (prompts for harness, link method, and artifacts)
-npx vancy init
-```
+node bin/cli.mjs init
 
-*Or install with non-interactive defaults:*
-```bash
-npx vancy init --yes --harness all
+# Or install with non-interactive defaults:
+node bin/cli.mjs init --target . --yes --harness all
 ```
 
 This creates:

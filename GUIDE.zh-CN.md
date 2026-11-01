@@ -15,13 +15,11 @@
 打开终端，进入你的求职工作文件夹并执行：
 
 ```bash
-# 启动交互式向导（自主选择开发环境适配器与软链接方式）
-npx vancy init
-```
+# 启动交互式向导（自主选择开发环境适配器与链接方式）
+node bin/cli.mjs init
 
-*或者直接使用全套默认设置极速安装：*
-```bash
-npx vancy init --yes --harness all
+# 或者直接在当前目录下使用全套默认设置极速安装：
+node bin/cli.mjs init --target . --yes --harness all
 ```
 
 安装完成后，你的目录中将具备：

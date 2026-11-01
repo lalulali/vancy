@@ -62,28 +62,31 @@
 
 ---
 
-## 3. 极速安装与命令行 (CLI)
+## 3. 安装与命令行工具 (`node bin/cli.mjs`)
 
-Vancy 内置开箱即用的命令行工具，支持环境初始化、适配器联动与防篡改校验：
+克隆或下载本仓库后，直接通过 Node.js 运行安装与配置脚本：
 
 ```bash
-# 启动交互式安装向导（自主选择开发环境适配器与软链接方式）
-npx vancy init
+# 1. 启动交互式安装向导（自主选择开发环境适配器与链接方式）
+node bin/cli.mjs init
 
-# 或使用静默模式直接全量安装
-npx vancy init --yes --harness all
+# 2. 或在当前目录下免交互静默安装所有适配器
+node bin/cli.mjs init --target . --harness all --yes
+
+# 3. 安装至指定的目标项目路径
+node bin/cli.mjs init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # 随时重新配置适配器（添加或移除 Claude Code、OpenCode、Copilot、Kiro 支持）
-npx vancy reconfigure
+node bin/cli.mjs reconfigure --target .
 
 # 检查并将核心提示词、技能库及脚本升级至最新版
-npx vancy update --yes
+node bin/cli.mjs update --target . --yes
 
 # 对本地安装文件进行基于数字签名的完整性校验
-npx vancy verify
+node bin/cli.mjs verify --target .
 
 # 安全卸载（清理核心与适配文件，但 100% 完整保留你的 artifacts/ 求职成果）
-npx vancy uninstall
+node bin/cli.mjs uninstall --target .
 ```
 
 ### 支持的 AI 开发环境与适配层 (Harnesses)

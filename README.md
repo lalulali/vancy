@@ -62,28 +62,31 @@ A master agent orchestrates these twelve skills in sequence:
 
 ---
 
-## 3. Quick Installation & CLI
+## 3. Installation & CLI (`node bin/cli.mjs`)
 
-Vancy provides a built-in CLI for workspace configuration, harness setup, and integrity checking:
+Clone or download the repository, then run the installer using Node.js:
 
 ```bash
-# Interactive setup wizard (prompts for harnesses, link method, and scope)
-npx vancy init
+# 1. Interactive setup wizard (prompts for harnesses, link method, and scope)
+node bin/cli.mjs init
 
-# Or install non-interactively with all harnesses
-npx vancy init --yes --harness all
+# 2. Or install non-interactively with all harnesses into the current directory
+node bin/cli.mjs init --target . --harness all --yes
+
+# 3. Install into a specific target project folder
+node bin/cli.mjs init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # Reconfigure harnesses anytime (add or remove Claude Code, OpenCode, Copilot, Kiro)
-npx vancy reconfigure
+node bin/cli.mjs reconfigure --target .
 
 # Update prompts, skills, and templates to the latest version
-npx vancy update --yes
+node bin/cli.mjs update --target . --yes
 
 # Verify local file integrity against cryptographically pinned manifest
-npx vancy verify
+node bin/cli.mjs verify --target .
 
 # Safely uninstall Vancy (removes core files while preserving your artifacts/)
-npx vancy uninstall
+node bin/cli.mjs uninstall --target .
 ```
 
 ### Supported AI Coding Environments & Harnesses
