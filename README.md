@@ -8,6 +8,12 @@
 
 Unlike generic AI tools that hallucinate skills or output buzzword-filled summaries, Vancy enforces a **Discovery-First, Truth-Based** workflow: it interviews you about your real engineering architecture, metrics, and technical contributions before authoring or modifying any document.
 
+Get started in your job-search folder — nothing to clone:
+
+```bash
+npx career-consultant-skills init
+```
+
 ---
 
 ## 1. The Twelve Skills
@@ -62,38 +68,48 @@ A master agent orchestrates these twelve skills in sequence:
 
 ---
 
-## 3. Installation & CLI (`node bin/cli.mjs`)
+## 3. Installation & CLI
 
-Clone or download the repository, then run the installer using Node.js:
+Run the installer with `npx` — no clone required:
 
 ```bash
-# 1. Interactive setup wizard (prompts for harnesses, link method, and scope)
-node bin/cli.mjs init
+# Interactive setup wizard (harnesses, link method, language, paper size)
+npx career-consultant-skills init
 
-# 2. Or install non-interactively with all harnesses into the current directory
-node bin/cli.mjs init --target . --harness all --yes
+# Non-interactive install of every harness into the current directory
+npx career-consultant-skills init --target . --harness all --yes
 
-# 2b. ...and choose the document language and paper size up front
-node bin/cli.mjs init --target . --harness all --yes --lang en-GB --page a4
+# ...and choose the document language and paper size up front
+npx career-consultant-skills init --target . --harness all --yes --lang en-GB --page a4
 
-# 3. Install into a specific target project folder
-node bin/cli.mjs init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
+# Install into a specific target project folder
+npx career-consultant-skills init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # Reconfigure harnesses anytime (add or remove Claude Code, OpenCode, Copilot, Kiro)
-node bin/cli.mjs reconfigure --target .
+npx career-consultant-skills reconfigure --target .
 
 # Update prompts, skills, and templates to the latest version
-node bin/cli.mjs update --target . --yes
+npx career-consultant-skills update --target . --yes
 
-# Verify local file integrity against cryptographically pinned manifest
-node bin/cli.mjs verify --target .
+# Verify local file integrity against the cryptographically pinned manifest
+npx career-consultant-skills verify --target .
 
 # Set the standing language and paper size for generated documents
-node bin/cli.mjs config --lang en-US --page a4
+npx career-consultant-skills config --lang en-US --page a4
 
 # Safely uninstall Vancy (removes core files while preserving your artifacts/)
-node bin/cli.mjs uninstall --target .
+npx career-consultant-skills uninstall --target .
 ```
+
+Install it globally to get the shorter `vancy` alias:
+
+```bash
+npm install -g career-consultant-skills
+vancy init
+```
+
+Working from a clone? The same commands run through `node bin/cli.mjs`, for example
+`node bin/cli.mjs init`.
 
 ### Language and paper size
 

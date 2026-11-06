@@ -1,6 +1,6 @@
 {
   "name": "career-consultant-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Agent Skills and a career-consultant agent for the whole job search: job-ad analysis, CV and cover letter (build and review), LinkedIn, portfolio case studies, references, behavioural and PM interview prep, salary negotiation and an application tracker. Worldwide, no invented facts.",
   "type": "module",
   "bin": {

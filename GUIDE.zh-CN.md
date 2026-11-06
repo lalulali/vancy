@@ -15,12 +15,14 @@
 打开终端，进入你的求职工作文件夹并执行：
 
 ```bash
-# 启动交互式向导（自主选择开发环境适配器与链接方式）
-node bin/cli.mjs init
+# 启动交互式向导（适配器、链接方式、语言与纸张尺寸）
+npx career-consultant-skills init
 
 # 或者直接在当前目录下使用全套默认设置极速安装：
-node bin/cli.mjs init --target . --yes --harness all
+npx career-consultant-skills init --target . --yes --harness all
 ```
+
+若在本地克隆的仓库中运行，请将 `npx career-consultant-skills` 替换为 `node bin/cli.mjs`，参数保持不变。
 
 安装完成后，你的目录中将具备：
 - `.agents/`：核心智能体（career-consultant）与 12 项求职技能。

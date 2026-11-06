@@ -4,7 +4,7 @@ description: Prepares a candidate to evaluate and negotiate a job offer or pay r
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). Optionally uses LibreOffice (soffice) to convert .docx to PDF.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   author: career-consultant-skills
 ---
 

@@ -15,12 +15,14 @@ Welcome to **Vancy**! Vancy is your private, intelligent cross-industry career c
 In your terminal, navigate to your job-search folder and run:
 
 ```bash
-# Interactive setup wizard (prompts for harness, link method, and artifacts)
-node bin/cli.mjs init
+# Interactive setup wizard (harness, link method, language, paper size)
+npx career-consultant-skills init
 
 # Or install with non-interactive defaults:
-node bin/cli.mjs init --target . --yes --harness all
+npx career-consultant-skills init --target . --yes --harness all
 ```
+
+Working from a clone instead? Use `node bin/cli.mjs init` with the same flags.
 
 This creates:
 - `.agents/`: The core agent and 12 skills.

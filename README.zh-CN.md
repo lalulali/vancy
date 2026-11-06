@@ -8,6 +8,12 @@
 
 与市面上盲目脑补技能、堆砌假大空套话的通用 AI 工具截然不同，Vancy 严格贯彻 **“调研先行、真实至上、零臆造”** 的核心原则：在动笔撰写或定制任何材料之前，它会深入访谈你的真实底层系统架构、数据指标与个人核心贡献，打造出经得起硬核面试官深度推敲的高通过率求职材料。
 
+在你的求职工作目录中直接运行，无需克隆仓库：
+
+```bash
+npx career-consultant-skills init
+```
+
 ---
 
 ## 1. 十二项开箱即用的求职技能
@@ -62,35 +68,47 @@
 
 ---
 
-## 3. 安装与命令行工具 (`node bin/cli.mjs`)
+## 3. 安装与命令行工具
 
-克隆或下载本仓库后，直接通过 Node.js 运行安装与配置脚本：
+无需克隆仓库，直接通过 `npx` 运行安装向导：
 
 ```bash
-# 1. 启动交互式安装向导（自主选择开发环境适配器与链接方式）
-node bin/cli.mjs init
+# 启动交互式安装向导（适配器、链接方式、语言与纸张尺寸）
+npx career-consultant-skills init
 
-# 2. 或在当前目录下免交互静默安装所有适配器
-node bin/cli.mjs init --target . --harness all --yes
+# 或在当前目录下免交互静默安装所有适配器
+npx career-consultant-skills init --target . --harness all --yes
 
-# 3. 安装至指定的目标项目路径
-node bin/cli.mjs init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
+# ……并同时指定文档语言与纸张尺寸
+npx career-consultant-skills init --target . --harness all --yes --lang en-GB --page a4
+
+# 安装至指定的目标项目路径
+npx career-consultant-skills init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # 随时重新配置适配器（添加或移除 Claude Code、OpenCode、Copilot、Kiro 支持）
-node bin/cli.mjs reconfigure --target .
+npx career-consultant-skills reconfigure --target .
 
 # 检查并将核心提示词、技能库及脚本升级至最新版
-node bin/cli.mjs update --target . --yes
+npx career-consultant-skills update --target . --yes
 
 # 对本地安装文件进行基于数字签名的完整性校验
-node bin/cli.mjs verify --target .
+npx career-consultant-skills verify --target .
 
 # 设置生成文档时默认使用的语言与纸张尺寸
-node bin/cli.mjs config --lang en-US --page a4
+npx career-consultant-skills config --lang en-US --page a4
 
 # 安全卸载（清理核心与适配文件，但 100% 完整保留你的 artifacts/ 求职成果）
-node bin/cli.mjs uninstall --target .
+npx career-consultant-skills uninstall --target .
 ```
+
+全局安装后可改用更简短的 `vancy` 命令：
+
+```bash
+npm install -g career-consultant-skills
+vancy init
+```
+
+若在本地克隆的仓库中运行，请将上述命令中的 `npx career-consultant-skills` 替换为 `node bin/cli.mjs`。
 
 ### 语言与纸张尺寸
 

@@ -4,7 +4,7 @@ description: Deconstructs a job advertisement into a one-page Job Brief - why th
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`).
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   author: career-consultant-skills
 ---
 

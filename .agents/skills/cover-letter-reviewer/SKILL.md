@@ -4,7 +4,7 @@ description: Reviews, scores and strengthens an existing cover letter, covering 
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). Optionally uses pdftotext to read PDFs and LibreOffice (soffice) to convert .docx to PDF.
 metadata:
-  version: "1.0.0"
+  version: "1.0.1"
   author: career-consultant-skills
 ---
 
