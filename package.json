@@ -30,8 +30,9 @@
     "!**/*.lock"
   ],
   "scripts": {
-    "check": "node scripts/check-skills.mjs",
-    "prepublishOnly": "node scripts/check-skills.mjs"
+    "check": "node scripts/check-skills.mjs && node scripts/sync-version.mjs --check",
+    "version": "node scripts/sync-version.mjs --stage",
+    "prepublishOnly": "node scripts/check-skills.mjs && node scripts/sync-version.mjs --check"
   },
   "engines": {
     "node": ">=18"

@@ -7,9 +7,10 @@ import path from "node:path";
 import { R } from "./state.mjs";
 import { log } from "./logger.mjs";
 import { ADAPTERS as HARNESS_ADAPTERS } from "./harnesses/index.mjs";
+import { VERSION as PKG_VERSION } from "./pkg.mjs";
 
 export function createUi({
-  VERSION,
+  VERSION = PKG_VERSION,
   ASCII_ART,
   IS_TTY = Boolean(process.stdout && process.stdout.isTTY),
   wizardState = {},

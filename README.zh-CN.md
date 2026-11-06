@@ -157,11 +157,13 @@ python3 .agents/skills/salary-negotiation/scripts/offer_calc.py compare offers.j
 
 ## 6. 开发与代码质量验证
 
-运行自动化检测流水线，校验 Frontmatter 规范、Python AST 语法、打包内容与软链接完整性：
+运行自动化检测流水线，校验 Frontmatter 规范、Python AST 语法、打包内容与软链接完整性、版本号一致性：
 
 ```bash
 npm run check
 ```
+
+版本号只保存在 `package.json` 一处。若任一副本出现偏差，`npm run check` 会直接失败；执行 `npm version <patch|minor|major>` 时，新版本号会自动写入各技能 frontmatter 与 `.agents/manifest.json` 并暂存，同时打上发布标签。CLI、安装向导横幅与 `.agents/.vancy-version` 均在运行时读取同一个值。
 
 ---
 

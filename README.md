@@ -171,6 +171,11 @@ Run the automated test suite to verify frontmatter, compatibility, Python AST sy
 npm run check
 ```
 
+The version lives in `package.json` and nowhere else. `npm run check` fails if a copy has
+drifted, and `npm version <patch|minor|major>` copies the new number into the skill
+frontmatter and `.agents/manifest.json`, stages them, and tags the release. The CLI,
+the installer banner and `.agents/.vancy-version` read the same value at runtime.
+
 ---
 
 ## 7. Documentation

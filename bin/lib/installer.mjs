@@ -8,6 +8,7 @@ import os from "node:os";
 import path from "node:path";
 import { R } from "./state.mjs";
 import { handleConflict, createLinkOrCopy } from "./link-utils.mjs";
+import { VERSION as PKG_VERSION } from "./pkg.mjs";
 import {
   DEFAULT_LANG,
   DEFAULT_PAGE,
@@ -68,7 +69,7 @@ export function createInstaller(deps) {
     printWizardSummary,
     wizardState,
     ASCII_ART,
-    VERSION,
+    VERSION = PKG_VERSION,
     AGENTS_SRC,
   } = deps;
 

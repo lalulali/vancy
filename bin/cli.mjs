@@ -32,24 +32,15 @@ import {
 } from "./lib/config.mjs";
 import { createLinkOrCopy, handleConflict } from "./lib/link-utils.mjs";
 import { log, logDry, logError, logWarn } from "./lib/logger.mjs";
+import { PKG_ROOT, VERSION } from "./lib/pkg.mjs";
 import { R, resetRuntimeState, setState } from "./lib/state.mjs";
 import { createUi } from "./lib/ui.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const PKG_ROOT = path.resolve(__dirname, "..");
 const AGENTS_SRC = path.join(PKG_ROOT, ".agents");
 const SKILLS_SRC = path.join(AGENTS_SRC, "skills");
 const AGENT_SRC = path.join(AGENTS_SRC, "agents", "career-consultant");
 const IS_TTY = Boolean(process.stdout && process.stdout.isTTY);
-
-const VERSION = (() => {
-  try {
-    return JSON.parse(fs.readFileSync(path.join(PKG_ROOT, "package.json"), "utf8")).version;
-  } catch {
-    return "0.1.0";
-  }
-})();
 
 const ASCII_ART = `
  __  __                              
