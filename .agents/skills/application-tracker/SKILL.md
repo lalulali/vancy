@@ -4,8 +4,8 @@ description: Tracks job applications in one local CSV file - roles, which CV and
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). The CSV opens in Excel, Numbers and Google Sheets.
 metadata:
-  version: "1.0.1"
-  author: career-consultant-skills
+  version: "1.0.0"
+  author: vancy
 ---
 
 # Application Tracker

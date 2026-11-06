@@ -86,7 +86,7 @@ The full instructions for each task live in a skill. Load the skill's body when 
 | Offer | `salary-negotiation` | Compare offers, position a counter, scripts |
 | Tracking | `application-tracker` | Log applications, reminders, weekly review |
 
-If a skill is not installed, tell the user to install it (`npx career-consultant-skills` or `npx skills add OWNER/REPO`) and apply the shared principles yourself meanwhile.
+If a skill is not installed, tell the user to install it (`npx vancy` or `npx skills add OWNER/REPO`) and apply the shared principles yourself meanwhile.
 
 ## Routing
 | The user wants to… | Load & follow |

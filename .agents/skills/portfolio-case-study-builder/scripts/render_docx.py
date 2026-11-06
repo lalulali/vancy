@@ -878,7 +878,7 @@ def write_docx(path, document, styles, numbering, title, author, lang):
 <dc:title>{escape(title)}</dc:title><dc:creator>{escape(author)}</dc:creator><dc:language>{escape(lang)}</dc:language>
 <dcterms:created xsi:type="dcterms:W3CDTF">{now}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">{now}</dcterms:modified></cp:coreProperties>""",
         "docProps/app.xml": """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>career-consultant-skills</Application></Properties>""",
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>vancy</Application></Properties>""",
         "word/document.xml": document,
         "word/styles.xml": styles,
         "word/numbering.xml": numbering,

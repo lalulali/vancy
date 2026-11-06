@@ -11,7 +11,7 @@
 在你的求职工作目录中直接运行，无需克隆仓库：
 
 ```bash
-npx career-consultant-skills init
+npx vancy init
 ```
 
 ---
@@ -74,41 +74,41 @@ npx career-consultant-skills init
 
 ```bash
 # 启动交互式安装向导（适配器、链接方式、语言与纸张尺寸）
-npx career-consultant-skills init
+npx vancy init
 
 # 或在当前目录下免交互静默安装所有适配器
-npx career-consultant-skills init --target . --harness all --yes
+npx vancy init --target . --harness all --yes
 
 # ……并同时指定文档语言与纸张尺寸
-npx career-consultant-skills init --target . --harness all --yes --lang en-GB --page a4
+npx vancy init --target . --harness all --yes --lang en-GB --page a4
 
 # 安装至指定的目标项目路径
-npx career-consultant-skills init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
+npx vancy init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # 随时重新配置适配器（添加或移除 Claude Code、OpenCode、Copilot、Kiro 支持）
-npx career-consultant-skills reconfigure --target .
+npx vancy reconfigure --target .
 
 # 检查并将核心提示词、技能库及脚本升级至最新版
-npx career-consultant-skills update --target . --yes
+npx vancy update --target . --yes
 
 # 对本地安装文件进行基于数字签名的完整性校验
-npx career-consultant-skills verify --target .
+npx vancy verify --target .
 
 # 设置生成文档时默认使用的语言与纸张尺寸
-npx career-consultant-skills config --lang en-US --page a4
+npx vancy config --lang en-US --page a4
 
 # 安全卸载（清理核心与适配文件，但 100% 完整保留你的 artifacts/ 求职成果）
-npx career-consultant-skills uninstall --target .
+npx vancy uninstall --target .
 ```
 
 全局安装后可改用更简短的 `vancy` 命令：
 
 ```bash
-npm install -g career-consultant-skills
+npm install -g vancy
 vancy init
 ```
 
-若在本地克隆的仓库中运行，请将上述命令中的 `npx career-consultant-skills` 替换为 `node bin/cli.mjs`。
+若在本地克隆的仓库中运行，请将上述命令中的 `npx vancy` 替换为 `node bin/cli.mjs`。
 
 ### 语言与纸张尺寸
 

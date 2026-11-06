@@ -4,8 +4,8 @@ description: Prepares a candidate for a specific job interview - builds a STAR s
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). Optionally uses LibreOffice (soffice) to convert .docx to PDF.
 metadata:
-  version: "1.0.1"
-  author: career-consultant-skills
+  version: "1.0.0"
+  author: vancy
 ---
 
 # Interview Prep

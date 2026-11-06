@@ -4,8 +4,8 @@ description: Writes a tailored, one-page cover letter (or a cover email or a sho
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). Optionally uses pdftotext to read PDFs and LibreOffice (soffice) to convert .docx to PDF.
 metadata:
-  version: "1.0.1"
-  author: career-consultant-skills
+  version: "1.0.0"
+  author: vancy
 ---
 
 # Cover Letter Builder

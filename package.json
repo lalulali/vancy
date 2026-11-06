@@ -1,10 +1,9 @@
 {
-  "name": "career-consultant-skills",
-  "version": "1.0.1",
+  "name": "vancy",
+  "version": "1.0.0",
   "description": "Agent Skills and a career-consultant agent for the whole job search: job-ad analysis, CV and cover letter (build and review), LinkedIn, portfolio case studies, references, behavioural and PM interview prep, salary negotiation and an application tracker. Worldwide, no invented facts.",
   "type": "module",
   "bin": {
-    "career-consultant-skills": "bin/cli.mjs",
     "vancy": "bin/cli.mjs"
   },
   "files": [
@@ -59,5 +58,13 @@
     "salary-negotiation",
     "skills"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lalulali/vancy.git"
+  },
+  "homepage": "https://github.com/lalulali/vancy#readme",
+  "bugs": {
+    "url": "https://github.com/lalulali/vancy/issues"
+  }
 }

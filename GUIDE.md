@@ -16,10 +16,10 @@ In your terminal, navigate to your job-search folder and run:
 
 ```bash
 # Interactive setup wizard (harness, link method, language, paper size)
-npx career-consultant-skills init
+npx vancy init
 
 # Or install with non-interactive defaults:
-npx career-consultant-skills init --target . --yes --harness all
+npx vancy init --target . --yes --harness all
 ```
 
 Working from a clone instead? Use `node bin/cli.mjs init` with the same flags.

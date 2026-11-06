@@ -11,7 +11,7 @@ Unlike generic AI tools that hallucinate skills or output buzzword-filled summar
 Get started in your job-search folder — nothing to clone:
 
 ```bash
-npx career-consultant-skills init
+npx vancy init
 ```
 
 ---
@@ -74,37 +74,37 @@ Run the installer with `npx` — no clone required:
 
 ```bash
 # Interactive setup wizard (harnesses, link method, language, paper size)
-npx career-consultant-skills init
+npx vancy init
 
 # Non-interactive install of every harness into the current directory
-npx career-consultant-skills init --target . --harness all --yes
+npx vancy init --target . --harness all --yes
 
 # ...and choose the document language and paper size up front
-npx career-consultant-skills init --target . --harness all --yes --lang en-GB --page a4
+npx vancy init --target . --harness all --yes --lang en-GB --page a4
 
 # Install into a specific target project folder
-npx career-consultant-skills init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
+npx vancy init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
 # Reconfigure harnesses anytime (add or remove Claude Code, OpenCode, Copilot, Kiro)
-npx career-consultant-skills reconfigure --target .
+npx vancy reconfigure --target .
 
 # Update prompts, skills, and templates to the latest version
-npx career-consultant-skills update --target . --yes
+npx vancy update --target . --yes
 
 # Verify local file integrity against the cryptographically pinned manifest
-npx career-consultant-skills verify --target .
+npx vancy verify --target .
 
 # Set the standing language and paper size for generated documents
-npx career-consultant-skills config --lang en-US --page a4
+npx vancy config --lang en-US --page a4
 
 # Safely uninstall Vancy (removes core files while preserving your artifacts/)
-npx career-consultant-skills uninstall --target .
+npx vancy uninstall --target .
 ```
 
 Install it globally to get the shorter `vancy` alias:
 
 ```bash
-npm install -g career-consultant-skills
+npm install -g vancy
 vancy init
 ```
 

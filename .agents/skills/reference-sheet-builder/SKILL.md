@@ -4,8 +4,8 @@ description: Builds a one-page professional reference sheet and manages the refe
 license: MIT
 compatibility: Requires Python 3.8+ (standard library only; on Windows use `py` or `python`). Optionally uses LibreOffice (soffice) to convert .docx to PDF.
 metadata:
-  version: "1.0.1"
-  author: career-consultant-skills
+  version: "1.0.0"
+  author: vancy
 ---
 
 # Reference Sheet Builder
