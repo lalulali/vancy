@@ -26,7 +26,17 @@ This creates:
 - `.agents/`: The core agent and 12 skills.
 - `artifacts/input/`: Where you place your source documents.
 - `artifacts/output/`: Where all generated briefs, CVs, letters, and tracking spreadsheets land.
+- `.vancy/config.json`: Your standing language and paper size for generated documents.
 - Integrations for your favorite AI coding environment (`Claude Code`, `OpenCode`, `GitHub Copilot`, or `Kiro`).
+
+The wizard asks two questions — which language, and which paper size (A4 or Letter) — and saves both. The list is sorted A–Z and covers 22 languages, including English (UK), English (US) and Russian, plus "Other", where you can type any language tag. Paper defaults to Letter for US and Filipino documents and A4 everywhere else. Either question can be skipped with "decide later". For a non-interactive install, pass it yourself:
+
+```bash
+node bin/cli.mjs init --target . --yes --lang en-US --page letter
+node bin/cli.mjs config --lang en-GB --page a4    # change it later
+```
+
+Any BCP 47 tag works (`en-GB`, `fr-FR`, `de-DE`, `pt-PT`, `zh-TW`). A single document can override the setting with `lang:` and `page:` in its front matter.
 
 ### Step 2: Open with Your Preferred AI Assistant
 - **Claude Code**: Run `claude` in your folder. Vancy's `.claude/` harness and `CLAUDE.md` memory are pre-configured.
@@ -173,10 +183,10 @@ Vancy automatically logs every application to `artifacts/output/job-applications
 **Terminal commands to check your pipeline:**
 ```bash
 # Check applications due for follow-up in the next 7 days
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
 
 # View overall conversion funnel and statistics
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv stats
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv stats
 ```
 
 ---
@@ -207,6 +217,6 @@ python3 scripts/tracker.py --file artifacts/output/job-applications.csv stats
 ### Q: Can I change templates later?
 **A:** Yes! The documents are authored in clean Markdown. You can re-render any document to any template at any time:
 ```bash
-python3 scripts/render_docx.py artifacts/output/COMPANY_ROLE/My_CV.md -o My_CV.docx --template executive
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/COMPANY_ROLE/My_CV.md -o My_CV.docx --template executive
 ```
 

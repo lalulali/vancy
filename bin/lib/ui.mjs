@@ -70,7 +70,7 @@ export function createUi({
       ``,
       `  Next steps:`,
       `    1. Drop your CV, LinkedIn export, and job ads into artifacts/input/`,
-      `    2. Ask the career-consultant agent (Simonek) to analyze a job ad or tailor your CV`,
+      `    2. Ask the career-consultant agent (Clara) to analyze a job ad or tailor your CV`,
       `    3. Find all generated briefs, CVs, letters, and tracker in artifacts/output/`,
       `============================================================`,
     );
@@ -155,6 +155,9 @@ export function createUi({
     }
     if (wizardState.method !== undefined) {
       lines.push(`  Method:    ${wizardState.method}`);
+    }
+    if (wizardState.docs !== undefined) {
+      lines.push(`  Documents: ${wizardState.docs}`);
     }
     if (lines.length > 0) {
       process.stdout.write(`\n  \x1b[2m── Current Selections ──\x1b[0m\n`);

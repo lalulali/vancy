@@ -1,11 +1,11 @@
 # AI Career Consultant Workflow Guide
 
 > **Language**: [English](WORKFLOW.md) | [中文](WORKFLOW.zh-CN.md)  
-> **Target Audience**: AI Agents (Simonek, Claude Code, OpenCode, Copilot, Kiro) & Multi-Agent Orchestrators  
+> **Target Audience**: AI Agents (Clara, Claude Code, OpenCode, Copilot, Kiro) & Multi-Agent Orchestrators  
 > **User Manual**: See [GUIDE.md](GUIDE.md) | [GUIDE.zh-CN.md](GUIDE.zh-CN.md)  
 > **Project Overview**: See [README.md](README.md) | [README.zh-CN.md](README.zh-CN.md)
 
-This document specifies the strict operational workflow, behavioural rules, and execution protocols that any AI Agent acting as the **Career Consultant ("Simonek")** must follow.
+This document specifies the strict operational workflow, behavioural rules, and execution protocols that any AI Agent acting as the **Career Consultant ("Clara")** must follow.
 
 ---
 
@@ -136,7 +136,7 @@ Before writing or modifying any CV bullet or summary, conduct a targeted discove
    - Choose one of five ATS-compliant templates: `classic`, `modern`, `minimal`, `executive`, or `compact`.
    - Apply regional standards (A4 vs Letter, UK vs US spelling, omission of photo/age where standard).
 4. **Compile & Lint**:
-   - Run `python3 scripts/doc_lint.py <file> --type cv --job <job-ad>`.
+   - Run `python3 .agents/skills/cv-reviewer/scripts/doc_lint.py <file> --type cv --job <job-ad>`.
    - Verify zero unaddressed placeholders, zero hidden text, and clean formatting.
 
 ### Step 5: High-Impact Cover Letter (`cover-letter-builder` & `cover-letter-reviewer`)
@@ -153,22 +153,23 @@ Before rendering the final Word documents, verify across all outputs:
 - [ ] Candidate name, email, phone, and links match character-for-character.
 - [ ] Job titles, company names, and employment dates match exactly across CV, Letter, and LinkedIn.
 - [ ] Numbers and metrics mentioned in the cover letter match the CV precisely.
-- [ ] Spelling convention is uniform (100% US or 100% UK/Commonwealth).
+- [ ] Spelling convention is uniform and matches the document's `lang` (no mixing US and UK forms in an English document).
 - [ ] Zero unapproved placeholders (`[Company]`, `XX%`, `{{name}}`).
 
 ### Step 7: Final Word (.docx) Rendering
 Render production Word documents using the bundled python renderer:
 ```bash
-python3 scripts/render_docx.py artifacts/output/COMPANY_ROLE/Candidate_Name_CV.md \
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/COMPANY_ROLE/Candidate_Name_CV.md \
   -o artifacts/output/COMPANY_ROLE/Candidate_Name_CV.docx \
-  --template modern --page letter --final
+  --template modern --final
 ```
 *Note: `--final` automatically validates that all draft notes, references, and placeholders are cleared.*
+*Language and paper size come from `.vancy/config.json`; add `--lang`/`--page` only to override it for one document.*
 
 ### Step 8: Log to Application Tracker (`application-tracker`)
 Log the application in `artifacts/output/job-applications.csv`:
 ```bash
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv add \
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv add \
   --company "Acme Corp" --role "Staff Software Engineer" \
   --status "applied" --date "YYYY-MM-DD" \
   --cv "artifacts/output/Acme_Staff_SWE/Candidate_Name_CV.docx" \
@@ -191,11 +192,11 @@ All bundled scripts run using Python standard library (no pip packages required)
 
 | Script | Typical Command | Purpose |
 |---|---|---|
-| `render_docx.py` | `python3 scripts/render_docx.py input.md -o output.docx --template executive --final` | Render ATS-safe Word docx from Markdown |
-| `doc_lint.py` | `python3 scripts/doc_lint.py doc.docx --type cv --job job.txt` | Audit document for ATS compliance, keywords, and placeholders |
-| `analyze_ad.py` | `python3 scripts/analyze_ad.py job-ad.txt --resume cv.md` | Extract requirements, keywords, and match rate |
-| `score_sheet.py`| `python3 scripts/score_sheet.py --category product_sense --scores structure=4,insight=4` | Score PM interview responses against weighted rubrics |
-| `story_lint.py` | `python3 scripts/story_lint.py Story_Bank.md` | Audit STAR stories for concrete metrics and action depth |
-| `tracker.py`    | `python3 scripts/tracker.py --file tracker.csv due --days 7` | View overdue follow-ups and pipeline statistics |
-| `offer_calc.py` | `python3 scripts/offer_calc.py compare offers.json` | Compare compensation packages across multiple offers |
+| `render_docx.py` | `python3 .agents/skills/cv-builder/scripts/render_docx.py input.md -o output.docx --template executive --final` | Render ATS-safe Word docx from Markdown |
+| `doc_lint.py` | `python3 .agents/skills/cv-reviewer/scripts/doc_lint.py doc.docx --type cv --job job.txt` | Audit document for ATS compliance, keywords, and placeholders |
+| `analyze_ad.py` | `python3 .agents/skills/job-ad-analyzer/scripts/analyze_ad.py job-ad.txt --resume cv.md` | Extract requirements, keywords, and match rate |
+| `score_sheet.py`| `python3 .agents/skills/pm-interview-prep/scripts/score_sheet.py --category product_sense --scores structure=4,insight=4` | Score PM interview responses against weighted rubrics |
+| `story_lint.py` | `python3 .agents/skills/interview-prep/scripts/story_lint.py Story_Bank.md` | Audit STAR stories for concrete metrics and action depth |
+| `tracker.py`    | `python3 .agents/skills/application-tracker/scripts/tracker.py --file tracker.csv due --days 7` | View overdue follow-ups and pipeline statistics |
+| `offer_calc.py` | `python3 .agents/skills/salary-negotiation/scripts/offer_calc.py compare offers.json` | Compare compensation packages across multiple offers |
 

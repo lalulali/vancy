@@ -39,8 +39,6 @@ Format (the linter reads it). To render the bank as Word, start the file with th
 ---
 doc: interview
 template: minimal
-page: a4
-lang: en-GB
 ---
 
 # Your Name - Story Bank

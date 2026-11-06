@@ -31,7 +31,7 @@
 
 ---
 
-## 2. 职业顾问智能体 ("Simonek")
+## 2. 职业顾问智能体 ("Clara")
 
 主智能体统筹调度上述十二项技能，实现全流程闭环协同：
 
@@ -85,9 +85,24 @@ node bin/cli.mjs update --target . --yes
 # 对本地安装文件进行基于数字签名的完整性校验
 node bin/cli.mjs verify --target .
 
+# 设置生成文档时默认使用的语言与纸张尺寸
+node bin/cli.mjs config --lang en-US --page a4
+
 # 安全卸载（清理核心与适配文件，但 100% 完整保留你的 artifacts/ 求职成果）
 node bin/cli.mjs uninstall --target .
 ```
+
+### 语言与纸张尺寸
+
+文档会按照保存在 `.vancy/config.json` 中的全局设置进行渲染：
+
+```bash
+node bin/cli.mjs config                      # 查看当前设置
+node bin/cli.mjs config --lang en-GB         # 英式英语
+node bin/cli.mjs config --lang en-US --page letter
+```
+
+所有渲染器按以下优先级解析：命令行 `--lang`/`--page` → 文档自身的 front matter → `.vancy/config.json` → 默认回退值（`en-US`、`a4`）。安装向导提供按 A–Z 排序的 22 种语言，包含 English (UK) 与 English (US)；列表中没有的语言可选择 “Other” 手动输入。任何 BCP 47 标签均可使用（`en-GB`、`fr-FR`、`de-DE`、`pt-PT`、`zh-TW`）。技能库中的地区惯例表仍会为目标市场决定文档结构、篇幅与落款方式，因此使用美式英语的候选人申请英国职位时，该份文档仍会采用英式求职信惯例。
 
 ### 支持的 AI 开发环境与适配层 (Harnesses)
 - **Claude Code**：自动生成 `.claude -> .agents` 软链接与 `CLAUDE.md` 知识库。
@@ -110,29 +125,32 @@ node bin/cli.mjs uninstall --target .
 
 ## 5. 内置脚本终端速查
 
+以下路径以默认的 `.agents/` 安装为例；若安装在 `.claude/skills/`、`.kiro/skills/` 或 `~/.agents/skills/`，请相应替换路径前缀。
+
 你可以直接在终端中随时调用各类独立脚本：
 
 ```bash
 # 列出系统内置的 Word 排版模板
-python3 scripts/render_docx.py --list-templates
+python3 .agents/skills/cv-builder/scripts/render_docx.py --list-templates
 
 # 将定制好的 Markdown 简历渲染为交付级 Word 文档
-python3 scripts/render_docx.py artifacts/output/Acme_资深研发/张三_CV.md \
+# （仅在需要为单份文件覆盖 .vancy/config.json 时，才添加 --lang/--page）
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/Acme_资深研发/张三_CV.md \
   -o artifacts/output/Acme_资深研发/张三_CV.docx \
-  --template modern --page letter --final
+  --template modern --final
 
 # 静态合规检测：检查 ATS 兼容性、隐藏字符与占位符残留
-python3 scripts/doc_lint.py artifacts/output/Acme_资深研发/张三_CV.docx \
+python3 .agents/skills/cv-reviewer/scripts/doc_lint.py artifacts/output/Acme_资深研发/张三_CV.docx \
   --type cv --job artifacts/input/job_ad.txt
 
 # 查看未来 7 天内到期需跟进联系的岗位清单
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
 
 # 对产品经理面试模拟回答进行加权评分计算
-python3 scripts/score_sheet.py --category product_sense --scores structure=4,insight=4,creativity=3
+python3 .agents/skills/pm-interview-prep/scripts/score_sheet.py --category product_sense --scores structure=4,insight=4,creativity=3
 
 # 横向对比多份录用 Offer 的综合实际收益
-python3 scripts/offer_calc.py compare offers.json
+python3 .agents/skills/salary-negotiation/scripts/offer_calc.py compare offers.json
 ```
 
 ---

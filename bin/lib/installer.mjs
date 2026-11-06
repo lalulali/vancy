@@ -9,6 +9,16 @@ import path from "node:path";
 import { R } from "./state.mjs";
 import { handleConflict, createLinkOrCopy } from "./link-utils.mjs";
 import {
+  DEFAULT_LANG,
+  DEFAULT_PAGE,
+  LANGUAGE_CHOICES,
+  LETTER_MARKETS,
+  PAPER_CHOICES,
+  configFile,
+  validateLang,
+  writeConfig,
+} from "./config.mjs";
+import {
   ADAPTERS as HARNESS_ADAPTERS,
   HARNESS_OPTIONS,
   REGISTRY as HARNESS_REGISTRY,
@@ -439,13 +449,16 @@ export function createInstaller(deps) {
 
     let selections = flags.harnesses.length > 0 ? flags.harnesses : [];
     let method = flags.method || "symlink";
+    let docLang = flags.lang || null;
+    let docPage = flags.page || null;
     wizardState.scope = flags.global ? "Global" : "Project-level";
     wizardState.target = targetDir;
     wizardState.method = method;
+    wizardState.docs = `${docLang || DEFAULT_LANG} (default), ${docPage || DEFAULT_PAGE} (default)`;
 
     if (!flags.yes && process.stdin.isTTY) {
       let currentStep = 0;
-      const steps = ["harnesses", "scope", "path", "method", "confirm"];
+      const steps = ["harnesses", "scope", "path", "method", "language", "paper", "confirm"];
 
       while (currentStep < steps.length) {
         const step = steps[currentStep];
@@ -512,6 +525,80 @@ export function createInstaller(deps) {
             wizardState.method = method;
             currentStep++;
           }
+        } else if (step === "language") {
+          const otherIndex = LANGUAGE_CHOICES.length;
+          const laterIndex = otherIndex + 1;
+          const backIndex = otherIndex + 2;
+          const choiceLabels = [
+            ...LANGUAGE_CHOICES.map((c) => c.label),
+            "Other (type a language tag, e.g. sv-SE, ru-RU, pt-PT)",
+            "Decide later (set it per document, or with `npx vancy config`)",
+            "← Back",
+          ];
+          const initialIndex = Math.max(
+            0,
+            LANGUAGE_CHOICES.findIndex((c) => c.lang === (docLang || DEFAULT_LANG)),
+          );
+          const langChoice = await askSingleChoice(
+            "Which language should your documents be written in?",
+            choiceLabels,
+            initialIndex,
+          );
+          if (langChoice === backIndex) {
+            currentStep--;
+          } else if (langChoice === laterIndex) {
+            docLang = null;
+            currentStep++;
+          } else if (langChoice === otherIndex) {
+            let accepted = null;
+            for (let attempt = 0; attempt < 3 && accepted === null; attempt++) {
+              const typed = await askQuestion(
+                "Enter a language tag (e.g. sv-SE, ru-RU, pt-PT); blank to go back",
+                "",
+              );
+              if (!typed) break;
+              try {
+                accepted = validateLang(typed);
+              } catch (err) {
+                logError(err.message);
+              }
+            }
+            if (accepted) {
+              docLang = accepted;
+              wizardState.docs = `${docLang}, ${docPage || `${DEFAULT_PAGE} (default)`}`;
+              currentStep++;
+            }
+          } else {
+            docLang = LANGUAGE_CHOICES[langChoice].lang;
+            wizardState.docs = `${docLang}, ${docPage || `${DEFAULT_PAGE} (default)`}`;
+            currentStep++;
+          }
+        } else if (step === "paper") {
+          const choiceLabels = [
+            ...PAPER_CHOICES.map((c) => c.label),
+            "Decide later (set it per document, or with `npx vancy config`)",
+            "← Back",
+          ];
+          const preferredPage = docPage || (LETTER_MARKETS.has(docLang) ? "letter" : "a4");
+          const initialIndex = Math.max(
+            0,
+            PAPER_CHOICES.findIndex((c) => c.page === preferredPage),
+          );
+          const paperChoice = await askSingleChoice(
+            "Which paper size should your documents use?",
+            choiceLabels,
+            initialIndex,
+          );
+          if (paperChoice === choiceLabels.length - 1) {
+            currentStep--;
+          } else if (paperChoice === choiceLabels.length - 2) {
+            docPage = null;
+            currentStep++;
+          } else {
+            docPage = PAPER_CHOICES[paperChoice].page;
+            wizardState.docs = `${docLang || `${DEFAULT_LANG} (default)`}, ${docPage || `${DEFAULT_PAGE} (default)`}`;
+            currentStep++;
+          }
         } else if (step === "confirm") {
           clearScreen();
           log(ASCII_ART);
@@ -522,6 +609,9 @@ export function createInstaller(deps) {
           log(`  Scope:     ${wizardState.scope}`);
           log(`  Target:    ${wizardState.scope === "Global" ? os.homedir() : targetDir}`);
           log(`  Method:    ${method}`);
+          log(
+            `  Documents: ${docLang || `${DEFAULT_LANG} (default)`}, ${docPage || `${DEFAULT_PAGE} (default)`}`,
+          );
           log(`  \x1b[2m────────────────────\x1b[0m\n`);
 
           const confirmChoice = await askSingleChoice(
@@ -586,6 +676,21 @@ export function createInstaller(deps) {
     }
     bootstrapRootDocs(targetDir, projectName, selections);
     await installHarnesses(targetDir, selections, method);
+
+    const chosenLocale = docLang || docPage ? { lang: docLang, page: docPage } : null;
+    if (chosenLocale) {
+      if (R.dryRun) {
+        logDry(`Would write ${configFile(targetDir)}: ${JSON.stringify(chosenLocale)}`);
+      } else {
+        try {
+          const { file, data } = writeConfig(targetDir, chosenLocale);
+          log(`  Document language: ${data.lang || "default"}, paper: ${data.page || "default"} (${file})`);
+        } catch (err) {
+          logError(`Could not save the document language: ${err.message}`);
+          process.exit(2);
+        }
+      }
+    }
 
     if (!R.dryRun) {
       printSummary(targetDir, { harnesses: selections });

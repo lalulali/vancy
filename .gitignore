@@ -21,3 +21,6 @@ job-applications.csv
 offers*.json
 *_References*.md
 *.lock
+
+# Per-install preferences (language, paper size): personal, never published
+.vancy/

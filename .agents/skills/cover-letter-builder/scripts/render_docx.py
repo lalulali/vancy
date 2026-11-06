@@ -8,7 +8,10 @@ applicant tracking systems and reads correctly with screen readers.
 
 Usage:
   render_docx.py INPUT.md -o OUTPUT.docx [--template NAME] [--page a4|letter]
-                 [--lang en-GB] [--final] [--clean-md OUT.md] [--allow-placeholders] [--allow-outside]
+                 [--lang en-US] [--final] [--clean-md OUT.md] [--allow-placeholders] [--allow-outside]
+
+Language and paper size resolve in this order: --lang/--page, then the document's
+front matter, then .vancy/config.json in the project root, then en-US / a4.
   render_docx.py --list-templates
 
 Front matter `doc:` (optional, default cv). It sets the Word title property and, for letters, the body style:
@@ -45,6 +48,7 @@ built file passes a text round-trip self-check. On Windows use `py` or `python` 
 """
 import argparse
 import datetime as _dt
+import json
 import os
 import re
 import sys
@@ -949,6 +953,54 @@ def allowed_root():
     return os.path.realpath(out) if os.path.isdir(out) else cwd
 
 
+CONFIG_NAME = os.path.join(".vancy", "config.json")
+
+
+def config_paths():
+    """Where a standing preference may live: <cwd>/.vancy/config.json, then the project root."""
+    cwd = os.path.realpath(os.getcwd())
+    cands = [os.path.join(cwd, CONFIG_NAME)]
+    root = os.path.dirname(os.path.dirname(allowed_root()))
+    alt = os.path.join(root, CONFIG_NAME)
+    if alt not in cands:
+        cands.append(alt)
+    return cands
+
+
+def load_config():
+    """Read the optional standing preference. Returns {} when absent.
+
+    The file is {"lang": "en-GB", "page": "a4"}; both keys optional. An unreadable or
+    malformed file raises rather than being ignored, so a typo never silently renders
+    a document in the wrong language.
+    """
+    for path in config_paths():
+        if not os.path.isfile(path):
+            continue
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except OSError as e:
+            raise CliError("cannot read config %s: %s" % (path, e.strerror or e))
+        except ValueError as e:
+            raise CliError("config %s is not valid JSON: %s" % (path, e))
+        if not isinstance(data, dict):
+            raise CliError("config %s must be a JSON object such as {\"lang\": \"en-US\", \"page\": \"letter\"}." % path)
+        cfg = {}
+        lang = data.get("lang")
+        if lang is not None:
+            if not isinstance(lang, str) or not LANG_RE.match(lang.strip()):
+                raise CliError("config %s: lang %r is not a BCP 47 tag such as en-US or en-GB." % (path, lang))
+            cfg["lang"] = lang.strip()
+        page = data.get("page")
+        if page is not None:
+            if not isinstance(page, str) or page.strip().lower() not in PAGES:
+                raise CliError("config %s: page %r must be a4 or letter." % (path, page))
+            cfg["page"] = page.strip().lower()
+        return cfg
+    return {}
+
+
 def check_write_target(path, flag, allow_outside=False):
     """Validate a file this script is about to write. Returns the resolved path or raises CliError (exit 2).
 
@@ -1053,10 +1105,11 @@ def run(a, ap):
     theme = (a.template or meta.get("template", "modern")).strip().lower()
     if theme not in THEMES:
         raise CliError("unknown template %r; choose from %s" % (theme, ", ".join(sorted(THEMES))))
-    page = (a.page or meta.get("page", "a4")).lower()
+    cfg = load_config()
+    page = (a.page or meta.get("page") or cfg.get("page") or "a4").lower()
     if page not in PAGES:
         raise CliError("page must be a4 or letter")
-    lang = a.lang or meta.get("lang", "en-GB")
+    lang = a.lang or meta.get("lang") or cfg.get("lang") or "en-US"
     if not LANG_RE.match(lang):
         raise CliError("invalid language tag %r; use a BCP 47 tag such as en-GB, en-US or fr." % lang)
 
@@ -1153,8 +1206,8 @@ def main(argv=None):
     ap.add_argument("input", nargs="?")
     ap.add_argument("-o", "--output", help="output .docx (must be inside the output folder; see 'Where files may be written')")
     ap.add_argument("--template", metavar="{%s}" % ",".join(sorted(THEMES)), help="visual template (see --list-templates)")
-    ap.add_argument("--page", metavar="{a4,letter}", help="paper size (default a4)")
-    ap.add_argument("--lang")
+    ap.add_argument("--page", metavar="{a4,letter}", help="paper size (default a4, or .vancy/config.json)")
+    ap.add_argument("--lang", help="BCP 47 tag (default en-US, or .vancy/config.json)")
     ap.add_argument("--final", action="store_true", help="strip notes/citations; block on placeholders (and on missing referee consent)")
     ap.add_argument("--clean-md", help="also write the cleaned final Markdown (.md or .txt) to this path; requires --final")
     ap.add_argument("--allow-placeholders", action="store_true",

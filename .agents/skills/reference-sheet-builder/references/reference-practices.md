@@ -44,8 +44,6 @@ Never list someone who has not agreed.
 ---
 doc: references
 template: minimal
-page: a4
-lang: en-GB
 ---
 
 # Your Name

@@ -15,8 +15,8 @@ All documents are written first as Markdown in the constrained format below. `sc
 ---
 doc: cv                 # cv | cover-letter | references | linkedin | interview | case-study | offer | negotiation
 template: modern        # classic | modern | minimal | executive | compact
-page: a4                # a4 | letter
-lang: en-GB             # sets Word spell-check language
+page: a4                # a4 | letter; omit to use .vancy/config.json, then a4
+lang: en-US             # Word spell-check language; omit to use .vancy/config.json, then en-US
 ---
 
 # Full Name

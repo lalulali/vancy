@@ -21,6 +21,15 @@ import {
   getGlobalPath,
 } from "./lib/harnesses/index.mjs";
 import { createInstaller } from "./lib/installer.mjs";
+import {
+  DEFAULT_LANG,
+  DEFAULT_PAGE,
+  describeConfig,
+  readConfig,
+  validateLang,
+  validatePage,
+  writeConfig,
+} from "./lib/config.mjs";
 import { createLinkOrCopy, handleConflict } from "./lib/link-utils.mjs";
 import { log, logDry, logError, logWarn } from "./lib/logger.mjs";
 import { R, resetRuntimeState, setState } from "./lib/state.mjs";
@@ -789,6 +798,47 @@ function performList() {
   log("");
 }
 
+const CONFIG_REL = path.join(".vancy", "config.json");
+
+function performConfig(targetDir, flags) {
+  const file = path.join(targetDir, CONFIG_REL);
+
+  if (!flags.lang && !flags.page) {
+    const current = describeConfig(targetDir);
+    log(`Config: ${file}`);
+    log(`  lang: ${current.lang}`);
+    log(`  page: ${current.page}`);
+    log(`\nSet a value with: npx vancy config --lang en-GB --page a4`);
+    return;
+  }
+
+  if (flags.dryRun) {
+    let preview;
+    try {
+      preview = readConfig(targetDir);
+    } catch (err) {
+      logError(err.message);
+      process.exit(2);
+    }
+    if (flags.lang) preview.lang = flags.lang;
+    if (flags.page) preview.page = flags.page;
+    logDry(`Would write ${file}: ${JSON.stringify(preview)}`);
+    return;
+  }
+
+  let written;
+  try {
+    written = writeConfig(targetDir, { lang: flags.lang, page: flags.page });
+  } catch (err) {
+    logError(err.message);
+    process.exit(2);
+  }
+
+  log(`Wrote ${written.file}`);
+  log(`  lang: ${written.data.lang || `${DEFAULT_LANG} (default)`}`);
+  log(`  page: ${written.data.page || `${DEFAULT_PAGE} (default)`}`);
+}
+
 async function showActionMenu(targetDir, flags) {
   log(`\n============================================================`);
   log(`   VANCY v${VERSION} — Career Consultant CLI`);
@@ -846,6 +896,8 @@ function parseFlags(argv) {
     reconfigure: false,
     list: false,
     json: false,
+    lang: null,
+    page: null,
     command: null,
   };
 
@@ -870,6 +922,22 @@ function parseFlags(argv) {
     } else if (arg === "list" || arg === "--list") {
       flags.list = true;
       flags.command = "list";
+    } else if (arg === "config") {
+      flags.command = "config";
+    } else if (arg === "--lang") {
+      const val = args[++i];
+      if (val === undefined || val.startsWith("-")) {
+        console.error("Missing value for flag: --lang");
+        process.exit(2);
+      }
+      flags.lang = val;
+    } else if (arg === "--page") {
+      const val = args[++i];
+      if (val === undefined || val.startsWith("-")) {
+        console.error("Missing value for flag: --page");
+        process.exit(2);
+      }
+      flags.page = val;
     } else if (arg === "--json") {
       flags.json = true;
     } else if (arg === "--dry-run") {
@@ -940,6 +1008,14 @@ function parseFlags(argv) {
     }
   }
 
+  try {
+    if (flags.lang) flags.lang = validateLang(flags.lang);
+    if (flags.page) flags.page = validatePage(flags.page);
+  } catch (err) {
+    console.error(`Error: ${err.message}`);
+    process.exit(2);
+  }
+
   return flags;
 }
 
@@ -954,6 +1030,8 @@ Options:
   --harness <names>     Pre-select harnesses (opencode,claude,github,kiro or all)
   --symlink / --copy    Harness link method (.agents/ core is always copied)
   --no-artifacts        Do not scaffold artifacts/{input,output}/
+  --lang <tag>          Language for generated documents (any BCP 47 tag: en-US, en-GB, fr-FR, de-DE)
+  --page <a4|letter>    Paper size for generated documents
   --dry-run             Preview installation without creating files
   --help, -h            Show this help message
 `,
@@ -1005,6 +1083,26 @@ Options:
   --json                Output manifest status as JSON
   --help, -h            Show this help message
 `,
+  config: `vancy config — Show or set the standing language and paper size
+
+Writes <target>/.vancy/config.json, which every document renderer reads after
+the command line and the document's own front matter, and before the fallback.
+
+Usage: npx vancy config [--lang <tag>] [--page <a4|letter>]
+
+Options:
+  --lang <tag>          BCP 47 language tag for Word spell-check (e.g. en-US, en-GB,
+                        en-AU, fr-FR). Default: en-US
+  --page <size>         a4 or letter. Default: a4
+  --target <path>       Target directory (default: current directory)
+  --dry-run             Show what would be written without writing it
+  --help, -h            Show this help message
+
+Examples:
+  npx vancy config                       Show the current setting
+  npx vancy config --lang en-GB          British English, paper size unchanged
+  npx vancy config --lang en-US --page letter
+`,
 };
 
 // ---------------------------------------------------------------------------
@@ -1039,11 +1137,14 @@ Commands:
   verify               Verify integrity of .agents/ against pinned manifest
   manifest             Generate .agents/manifest.json checksums file
   list                 List bundled agent, skills, and supported harnesses
+  config               Show or set the standing language and paper size
 
 Options:
   --dry-run            Preview all actions without making changes
   --yes, -y            Skip all interactive prompts, use defaults
   --target, -t <path>  Specify installation directory
+  --lang <tag>         Language for config: a BCP 47 tag such as en-US or en-GB
+  --page <size>        Paper size for config: a4 or letter
   --harness, -H <ids>  Pre-select harness(es), comma-separated (${HARNESS_OPTIONS.map((o) => o.id).join(", ")}, or all)
   --symlink            Link harness directories to .agents/ (default)
   --copy               Copy harness files instead of symlinking
@@ -1066,6 +1167,7 @@ Examples:
   npx vancy reconfigure                     Interactive harness reconfiguration
   npx vancy update --yes                    Update existing install
   npx vancy verify                          Check integrity against manifest
+  npx vancy config --lang en-US --page a4   Set English and paper size for your documents
   npx vancy uninstall                       Cleanly remove Vancy (preserves artifacts/)
 `);
     process.exit(0);
@@ -1085,6 +1187,11 @@ Examples:
 
   if (flags.manifest) {
     performGenerateManifest(targetDir, flags);
+    return;
+  }
+
+  if (flags.command === "config") {
+    performConfig(targetDir, flags);
     return;
   }
 

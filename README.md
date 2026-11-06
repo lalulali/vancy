@@ -31,7 +31,7 @@ Every skill is standalone (`SKILL.md` + `references/` + `scripts/` + `assets/`) 
 
 ---
 
-## 2. The Career Consultant Agent ("Simonek")
+## 2. The Career Consultant Agent ("Clara")
 
 A master agent orchestrates these twelve skills in sequence:
 
@@ -73,6 +73,9 @@ node bin/cli.mjs init
 # 2. Or install non-interactively with all harnesses into the current directory
 node bin/cli.mjs init --target . --harness all --yes
 
+# 2b. ...and choose the document language and paper size up front
+node bin/cli.mjs init --target . --harness all --yes --lang en-GB --page a4
+
 # 3. Install into a specific target project folder
 node bin/cli.mjs init --target /path/to/my-project --harness claude,opencode,github,kiro --yes
 
@@ -85,9 +88,30 @@ node bin/cli.mjs update --target . --yes
 # Verify local file integrity against cryptographically pinned manifest
 node bin/cli.mjs verify --target .
 
+# Set the standing language and paper size for generated documents
+node bin/cli.mjs config --lang en-US --page a4
+
 # Safely uninstall Vancy (removes core files while preserving your artifacts/)
 node bin/cli.mjs uninstall --target .
 ```
+
+### Language and paper size
+
+Documents render with your standing choice, stored in `.vancy/config.json`:
+
+```bash
+node bin/cli.mjs config                      # show the current setting
+node bin/cli.mjs config --lang en-GB         # British English
+node bin/cli.mjs config --lang en-US --page letter
+```
+
+Every renderer resolves in this order: `--lang`/`--page` on the command line, then the
+document's own front matter, then `.vancy/config.json`, then the fallback (`en-US`, `a4`).
+The installer lists 22 languages A–Z, including English (UK) and English (US); choose
+"Other" there for any tag not listed. Any BCP 47 tag works (`en-GB`, `fr-FR`, `de-DE`,
+`pt-PT`, `zh-TW`). The skills' regional conventions tables still choose structure, length
+and sign-off for the target market, so a US-English user applying to a UK role still gets
+British letter conventions on that document.
 
 ### Supported AI Coding Environments & Harnesses
 - **Claude Code**: Scaffolds `.claude -> .agents` link + `CLAUDE.md` project memory.
@@ -110,29 +134,31 @@ node bin/cli.mjs uninstall --target .
 
 ## 5. Bundled Scripts
 
-All scripts can be executed directly from your terminal:
+All scripts can be executed directly from your terminal. Paths below assume the default `.agents/`
+install; use `.claude/skills/`, `.kiro/skills/` or `~/.agents/skills/` if you installed there.
 
 ```bash
 # List available Word templates
-python3 scripts/render_docx.py --list-templates
+python3 .agents/skills/cv-builder/scripts/render_docx.py --list-templates
 
 # Compile a tailored CV into a production-ready Word document
-python3 scripts/render_docx.py artifacts/output/Acme_SWE/Jane_Doe_CV.md \
+# (add --lang/--page only to override .vancy/config.json for this one file)
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/Acme_SWE/Jane_Doe_CV.md \
   -o artifacts/output/Acme_SWE/Jane_Doe_CV.docx \
-  --template modern --page letter --final
+  --template modern --final
 
 # Lint document for ATS compliance, white text, and placeholders
-python3 scripts/doc_lint.py artifacts/output/Acme_SWE/Jane_Doe_CV.docx \
+python3 .agents/skills/cv-reviewer/scripts/doc_lint.py artifacts/output/Acme_SWE/Jane_Doe_CV.docx \
   --type cv --job artifacts/input/job_ad.txt
 
 # Inspect application follow-up reminders due within 7 days
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
 
 # Run PM interview response scoring
-python3 scripts/score_sheet.py --category product_sense --scores structure=4,insight=4,creativity=3
+python3 .agents/skills/pm-interview-prep/scripts/score_sheet.py --category product_sense --scores structure=4,insight=4,creativity=3
 
 # Compare multiple job offers
-python3 scripts/offer_calc.py compare offers.json
+python3 .agents/skills/salary-negotiation/scripts/offer_calc.py compare offers.json
 ```
 
 ---

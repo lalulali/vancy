@@ -26,7 +26,17 @@ node bin/cli.mjs init --target . --yes --harness all
 - `.agents/`：核心智能体（career-consultant）与 12 项求职技能。
 - `artifacts/input/`：【只读输入区】放置你的原始简历、笔记与招聘启事。
 - `artifacts/output/`：【输出区】归档所有生成的分析简报、定制简历、求职信与求职进度总表。
+- `.vancy/config.json`：生成文档时默认使用的语言与纸张尺寸。
 - 你所选 AI 开发工具的无缝联动配置（支持 `Claude Code`、`OpenCode`、`GitHub Copilot`、`Kiro`）。
+
+向导会依次询问两个问题：文档使用哪种语言、以及使用哪种纸张尺寸（A4 或 Letter），并将两者一并保存。语言列表按 A–Z 排序，共 22 种，包含 English (UK)、English (US) 与 Russian；选择 “Other” 可手动输入任意语言标签。纸张默认值：美国与菲律宾文档为 Letter，其余地区为 A4。两个问题都可以选择 “decide later” 跳过。若需免交互安装，可直接指定：
+
+```bash
+node bin/cli.mjs init --target . --yes --lang en-US --page letter
+node bin/cli.mjs config --lang en-GB --page a4    # 之后随时修改
+```
+
+任何 BCP 47 语言标签均可使用（`en-GB`、`fr-FR`、`de-DE`、`pt-PT`、`zh-TW`）。单份文档也可以在 front matter 中用 `lang:` 与 `page:` 覆盖全局设置。
 
 ### 第二步：在你喜欢的 AI 编程或对话环境中开启
 - **Claude Code**：在终端运行 `claude`，内置的 `.claude/` 软链接与 `CLAUDE.md` 记忆文件已自动就绪。
@@ -173,10 +183,10 @@ Vancy **坚决不瞎猜、不脑补**。它会根据岗位简报与你现有材�
 **在终端中随时掌握求职看板：**
 ```bash
 # 查询未来 7 天内需要跟进联系的岗位
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv due --days 7
 
 # 查看当前求职漏斗统计（投递数、面试转化率、拒信与 Offer）
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv stats
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv stats
 ```
 
 ---
@@ -207,6 +217,6 @@ python3 scripts/tracker.py --file artifacts/output/job-applications.csv stats
 ### 问：生成 Word 之后，我还能更换排版模板吗？
 **答**：当然可以！底层文档均以规范的 Markdown 格式保存。你随时可以在终端中一行命令无损切换到任意模板：
 ```bash
-python3 scripts/render_docx.py artifacts/output/公司_职位/简历.md -o 新简历.docx --template executive
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/公司_职位/简历.md -o 新简历.docx --template executive
 ```
 

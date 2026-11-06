@@ -1,11 +1,11 @@
 # AI 职业顾问工作流规范指南 (WORKFLOW)
 
 > **语言版本**: [English](WORKFLOW.md) | [中文](WORKFLOW.zh-CN.md)  
-> **适用对象**: AI 智能体 (Simonek、Claude Code、OpenCode、Copilot、Kiro) 及多智能体编排器  
+> **适用对象**: AI 智能体 (Clara、Claude Code、OpenCode、Copilot、Kiro) 及多智能体编排器  
 > **用户操作指南**: 参见 [GUIDE.zh-CN.md](GUIDE.zh-CN.md) | [GUIDE.md](GUIDE.md)  
 > **项目概览**: 参见 [README.zh-CN.md](README.zh-CN.md) | [README.md](README.md)
 
-本文档明确规范了 AI 智能体在担任 **职业咨询顾问 ("Simonek")** 时必须严格遵循的标准化工作流、行为准则与执行协议。
+本文档明确规范了 AI 智能体在担任 **职业咨询顾问 ("Clara")** 时必须严格遵循的标准化工作流、行为准则与执行协议。
 
 ---
 
@@ -132,7 +132,7 @@ flowchart TD
    - 提供 5 套 ATS 友好且排版优雅的单栏模板：`classic`（经典）、`modern`（现代）、`minimal`（极简）、`executive`（高管）、`compact`（紧凑）。
    - 遵循目标地区惯例（如欧美不贴照片、不写年龄；A4 或 Letter 纸张尺寸规范）。
 4. **代码静态合规检测**:
-   - 运行 `python3 scripts/doc_lint.py <file> --type cv --job <job-ad>`。
+   - 运行 `python3 .agents/skills/cv-reviewer/scripts/doc_lint.py <file> --type cv --job <job-ad>`。
    - 保证 0 占位符残留、0 格式异常。
 
 ### 步骤 5：高转化求职信撰写 (`cover-letter-builder` & `cover-letter-reviewer`)
@@ -149,22 +149,23 @@ flowchart TD
 - [ ] 姓名、联系电话、邮箱在所有文档中完全一致。
 - [ ] 职位名称、公司名称、起止任职时间（年月）与领英保持严丝合缝。
 - [ ] 求职信中提到的数字与成就数据，与简历中的表述 100% 对应。
-- [ ] 英文拼写规范全篇统一（完全使用美式拼写或英式拼写）。
+- [ ] 拼写规范全篇统一，并与文档的 `lang` 设置一致（英文文档不得混用美式与英式拼写）。
 - [ ] 检查并确认没有任何未被替换的占位符（如 `[Company]`、`XX%`、`{{name}}`）。
 
 ### 步骤 7：交付级 Word (.docx) 导出
 利用内置 Python 脚本渲染 Word 文档：
 ```bash
-python3 scripts/render_docx.py artifacts/output/COMPANY_ROLE/Candidate_Name_CV.md \
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/COMPANY_ROLE/Candidate_Name_CV.md \
   -o artifacts/output/COMPANY_ROLE/Candidate_Name_CV.docx \
-  --template modern --page letter --final
+  --template modern --final
 ```
 *注：`--final` 模式会自动拦截一切未清除的临时笔记与占位符。*
+*语言与纸张尺寸读取自 `.vancy/config.json`；仅当需要为某一份文档单独覆盖时，才添加 `--lang`/`--page`。*
 
 ### Step 8：登记本地求职进度追踪表 (`application-tracker`)
 将投递记录追加至本地私有文件 `artifacts/output/job-applications.csv`：
 ```bash
-python3 scripts/tracker.py --file artifacts/output/job-applications.csv add \
+python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv add \
   --company "Acme Corp" --role "资深后端架构师" \
   --status "applied" --date "YYYY-MM-DD" \
   --cv "artifacts/output/Acme_资深后端/Candidate_Name_CV.docx" \
@@ -187,11 +188,11 @@ python3 scripts/tracker.py --file artifacts/output/job-applications.csv add \
 
 | 工具脚本 | 常用运行命令 | 功能用途 |
 |---|---|---|
-| `render_docx.py` | `python3 scripts/render_docx.py input.md -o output.docx --template executive --final` | 将 Markdown 渲染为排版优雅且符合 ATS 规范的 Word 文档 |
-| `doc_lint.py` | `python3 scripts/doc_lint.py doc.docx --type cv --job job.txt` | 静态检查简历文档的 ATS 格式合规性、关键词匹配及占位符残留 |
-| `analyze_ad.py` | `python3 scripts/analyze_ad.py job-ad.txt --resume cv.md` | 解析岗位说明书，计算候选人匹配度并输出关键要求拆解 |
-| `score_sheet.py`| `python3 scripts/score_sheet.py --category product_sense --scores structure=4,insight=4` | 根据加权评分准则对产品经理面试表现进行结构化打分与复盘 |
-| `story_lint.py` | `python3 scripts/story_lint.py Story_Bank.md` | 自动化审查 STAR 面试故事，检测指标充分性与个人行动深度 |
-| `tracker.py`    | `python3 scripts/tracker.py --file tracker.csv due --days 7` | 查询即将逾期的跟进事项，输出求职漏斗统计报表 |
-| `offer_calc.py` | `python3 scripts/offer_calc.py compare offers.json` | 综合横向对比多份录用 Offer 的综合薪酬包与实际收益 |
+| `render_docx.py` | `python3 .agents/skills/cv-builder/scripts/render_docx.py input.md -o output.docx --template executive --final` | 将 Markdown 渲染为排版优雅且符合 ATS 规范的 Word 文档 |
+| `doc_lint.py` | `python3 .agents/skills/cv-reviewer/scripts/doc_lint.py doc.docx --type cv --job job.txt` | 静态检查简历文档的 ATS 格式合规性、关键词匹配及占位符残留 |
+| `analyze_ad.py` | `python3 .agents/skills/job-ad-analyzer/scripts/analyze_ad.py job-ad.txt --resume cv.md` | 解析岗位说明书，计算候选人匹配度并输出关键要求拆解 |
+| `score_sheet.py`| `python3 .agents/skills/pm-interview-prep/scripts/score_sheet.py --category product_sense --scores structure=4,insight=4` | 根据加权评分准则对产品经理面试表现进行结构化打分与复盘 |
+| `story_lint.py` | `python3 .agents/skills/interview-prep/scripts/story_lint.py Story_Bank.md` | 自动化审查 STAR 面试故事，检测指标充分性与个人行动深度 |
+| `tracker.py`    | `python3 .agents/skills/application-tracker/scripts/tracker.py --file tracker.csv due --days 7` | 查询即将逾期的跟进事项，输出求职漏斗统计报表 |
+| `offer_calc.py` | `python3 .agents/skills/salary-negotiation/scripts/offer_calc.py compare offers.json` | 综合横向对比多份录用 Offer 的综合薪酬包与实际收益 |
 
