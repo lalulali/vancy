@@ -10,6 +10,7 @@
     "bin/",
     ".agents/skills/",
     ".agents/agents/",
+    ".agents/templates/",
     "README.md",
     "README.zh-CN.md",
     "GUIDE.md",

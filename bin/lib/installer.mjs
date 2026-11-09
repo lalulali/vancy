@@ -130,6 +130,15 @@ export function createInstaller(deps) {
     log("  Scaffolded artifacts/input and artifacts/output directory tree.");
   }
 
+  // Writes a root doc when it is missing, or refreshes it when Vancy manages it.
+  // User-owned files (no Vancy marker) are never overwritten.
+  function shouldWriteRootDoc(filePath, content) {
+    if (!content) return false;
+    if (!fs.existsSync(filePath)) return true;
+    const current = fs.readFileSync(filePath, "utf8");
+    return current.startsWith("<!-- Vancy-managed") && current !== content;
+  }
+
   function bootstrapRootDocs(targetDir, projectName, selectedHarnesses) {
     const canonicalFile = fs.existsSync(
       path.join(targetDir, ".agents", "templates", "system", "AGENTS.md.canonical"),
@@ -165,14 +174,14 @@ export function createInstaller(deps) {
     const agentPath = path.join(targetDir, "agent.md");
 
     if (R.dryRun) {
-      if (!fs.existsSync(agentsPath)) logDry(`Would create AGENTS.md`);
-      if (!fs.existsSync(agentPath)) logDry(`Would create agent.md`);
+      if (shouldWriteRootDoc(agentsPath, agentsMd)) logDry(`Would write AGENTS.md`);
+      if (shouldWriteRootDoc(agentPath, agentMd)) logDry(`Would write agent.md`);
       if (selectedHarnesses.includes("claude")) logDry(`Would create CLAUDE.md`);
       return;
     }
 
-    if (!fs.existsSync(agentsPath)) fs.writeFileSync(agentsPath, agentsMd);
-    if (!fs.existsSync(agentPath)) fs.writeFileSync(agentPath, agentMd);
+    if (shouldWriteRootDoc(agentsPath, agentsMd)) fs.writeFileSync(agentsPath, agentsMd);
+    if (shouldWriteRootDoc(agentPath, agentMd)) fs.writeFileSync(agentPath, agentMd);
 
     if (selectedHarnesses.includes("claude")) {
       const claudePath = path.join(targetDir, "CLAUDE.md");

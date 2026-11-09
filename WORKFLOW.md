@@ -62,21 +62,28 @@ workspace/
 │   │   └── JobAd_Acme_Backend.txt
 │   └── output/                 # [WRITE-ENABLED for AI] All generated deliverables
 │       ├── Candidate_Profile.md# Cross-application candidate facts & baseline
-│       ├── Master_CV.md        # Canonical master resume
 │       ├── job-applications.csv# Local pipeline tracking ledger
-│       └── COMPANY_ROLE/       # Isolated folder per job application
-│           ├── Job_Brief_COMPANY_ROLE.md
-│           ├── Candidate_Name_CV.md
-│           ├── Candidate_Name_CV.docx
-│           ├── Candidate_Name_Cover_Letter.md
-│           ├── Candidate_Name_Cover_Letter.docx
-│           ├── STAR_Story_Bank.md
-│           └── Interview_Prep_Sheet.docx
+│       ├── resume/             # Master and base resume tracks (do not overwrite with company tailoring)
+│       │   ├── Track_A/
+│       │   └── Track_B/
+│       └── applications/       # Isolated folders per job application
+│           └── COMPANY_ROLE/
+│               ├── job-ad.txt
+│               ├── Job_Brief_COMPANY_ROLE.md
+│               ├── Candidate_Name_CV.md
+│               ├── Candidate_Name_CV.docx
+│               ├── Candidate_Name_CV.pdf
+│               ├── Candidate_Name_Cover_Letter.md
+│               ├── Candidate_Name_Cover_Letter.docx
+│               ├── Candidate_Name_Cover_Letter.pdf
+│               ├── STAR_Story_Bank.md
+│               └── Interview_Prep_Sheet.docx
 ```
 
 - **`artifacts/input/`**: AI reads from here. **Never write or overwrite files here.**
-- **`artifacts/output/COMPANY_ROLE/`**: Dedicated subfolder for each job target. Every tailored document lives in its respective company/role folder.
-- **Naming Conventions**: Use `Firstname_Lastname_CV.(md|docx)` and `Firstname_Lastname_Cover_Letter.(md|docx)`. Never use generic names like `resume_final_v2.docx`.
+- **`artifacts/output/resume/`**: Base resume tracks and master resumes.
+- **`artifacts/output/applications/COMPANY_ROLE/`**: Dedicated subfolder for each job target. Every tailored document lives in its respective company/role folder.
+- **Naming Conventions**: Use `Firstname_Lastname_CV.(md|docx|pdf)` and `Firstname_Lastname_Cover_Letter.(md|docx|pdf)`. Never use generic names like `resume_final_v2.docx`.
 
 ---
 
@@ -156,15 +163,32 @@ Before rendering the final Word documents, verify across all outputs:
 - [ ] Spelling convention is uniform and matches the document's `lang` (no mixing US and UK forms in an English document).
 - [ ] Zero unapproved placeholders (`[Company]`, `XX%`, `{{name}}`).
 
-### Step 7: Final Word (.docx) Rendering
+### Step 7: Final Word (.docx) Rendering & PDF Approval Gate
+1. **Render Word Documents**:
 Render production Word documents using the bundled python renderer:
 ```bash
-python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/COMPANY_ROLE/Candidate_Name_CV.md \
-  -o artifacts/output/COMPANY_ROLE/Candidate_Name_CV.docx \
+python3 .agents/skills/cv-builder/scripts/render_docx.py artifacts/output/applications/COMPANY_ROLE/Candidate_Name_CV.md \
+  -o artifacts/output/applications/COMPANY_ROLE/Candidate_Name_CV.docx \
   --template modern --final
 ```
 *Note: `--final` automatically validates that all draft notes, references, and placeholders are cleared.*
-*Language and paper size come from `.vancy/config.json`; add `--lang`/`--page` only to override it for one document.*
+
+2. **Approval Gate Before PDF Generation**:
+Present the generated `.docx` documents to the candidate for review. Do not export PDFs prematurely.
+
+3. **Pixel-Perfect PDF Generation**:
+Once the `.docx` documents are approved, generate the final text-based `.pdf` directly using `md_to_pdf.py`:
+```bash
+python3 .agents/skills/cv-builder/scripts/md_to_pdf.py artifacts/output/applications/COMPANY_ROLE/Candidate_Name_CV.md \
+  artifacts/output/applications/COMPANY_ROLE/Candidate_Name_CV.pdf
+
+python3 .agents/skills/cover-letter-builder/scripts/md_to_pdf.py artifacts/output/applications/COMPANY_ROLE/Candidate_Name_Cover_Letter.md \
+  artifacts/output/applications/COMPANY_ROLE/Candidate_Name_Cover_Letter.pdf
+```
+*Note: `md_to_pdf.py` guarantees 100% layout and margin parity with `.docx` (Calibri typography, teal `#1F6F78` rules stretching full width, and exact 0.75" / 19.05 mm margins without Pandoc width constraints).* Alternatively, if LibreOffice is installed, headless conversion can be performed via:
+```bash
+soffice --headless --convert-to pdf --outdir artifacts/output/applications/COMPANY_ROLE artifacts/output/applications/COMPANY_ROLE/Candidate_Name_CV.docx
+```
 
 ### Step 8: Log to Application Tracker (`application-tracker`)
 Log the application in `artifacts/output/job-applications.csv`:
@@ -172,8 +196,8 @@ Log the application in `artifacts/output/job-applications.csv`:
 python3 .agents/skills/application-tracker/scripts/tracker.py --file artifacts/output/job-applications.csv add \
   --company "Acme Corp" --role "Staff Software Engineer" \
   --status "applied" --date "YYYY-MM-DD" \
-  --cv "artifacts/output/Acme_Staff_SWE/Candidate_Name_CV.docx" \
-  --letter "artifacts/output/Acme_Staff_SWE/Candidate_Name_Cover_Letter.docx" \
+  --cv "artifacts/output/applications/Acme_Staff_SWE/Candidate_Name_CV.pdf" \
+  --letter "artifacts/output/applications/Acme_Staff_SWE/Candidate_Name_Cover_Letter.pdf" \
   --next-action "Follow up with recruiter" --due "YYYY-MM-DD"
 ```
 
